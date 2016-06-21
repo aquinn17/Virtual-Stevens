@@ -9,7 +9,7 @@ The .html file should run fine in most updated browsers.
 Use https://get.webgl.org/ to check your browser's compatibility. Updating the browser should allow WebGL. Otherwise
 look for how to enable WebGL in your preferred browser.
 
-All style sheets are built into the headers of the main LMCOville html files.
+
 
 LMCOvilleV1.7.html is the most recent. LMCOville.html is the workspace used for editing and, as of the last edits,
 identical to LMCOvilleV1.7.html
