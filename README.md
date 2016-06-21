@@ -1,5 +1,5 @@
 # Virtual-Stevens
-VIRTUAL LOCKHEED MARTIN - LMCOVILLE
+
 
 LMCOville uses browser-based WebGL to render 3D images using JavaScript. The Three.js library is used to make the
 coding much simpler.
