@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LMCOville</title>
+    </head>
+        <style>
+            .black_overlay{
+                display: none;
+                position: absolute;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index:1001;
+                -moz-opacity: 0.8;
+                opacity:.80;
+                filter: alpha(opacity=80);
+            }
+            .white_content {
+                display: none;
+                position: absolute;
+                top: 25%;
+                left: 25%;
+                width: 50%;
+                height: 50%;
+                padding: 16px;
+                border: 16px solid orange;
+                background-color: white;
+                z-index:1002;
+                overflow-y: auto;
+
+            img.opacity {
+                opacity: 0.8;
+                filter: alpha(opacity=80);
+                }
+
+            img.opacity:hover {
+                opacity: 1;
+                filter: alpha(opacity=100);
+                }
+
+
+
+            body { margin: 0; }
+            canvas { width: 100%; height: 100% }
+        </style>
+
+        <style type="text/css">
+            #tfheader{
+                background-color:#c3dfef;
+            }
+            #tfnewsearch{
+                float:right;
+                padding:20px;
+            }
+            .tftextinput{
+                margin: 0;
+                padding: 5px 15px;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size:14px;
+                border:1px solid #0076a3; border-right:0px;
+                border-top-left-radius: 5px 5px;
+                border-bottom-left-radius: 5px 5px;
+            }
+            .tfbutton {
+                margin: 0;
+                padding: 5px 15px;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size:14px;
+                outline: none;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                color: #ffffff;
+                border: solid 1px #0076a3; border-right:0px;
+                background: #0095cd;
+                background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+                background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+                border-top-right-radius: 5px 5px;
+                border-bottom-right-radius: 5px 5px;
+            }
+            .tfbutton:hover {
+                text-decoration: none;
+                background: #007ead;
+                background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+                background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+            }
+            /* Fixes submit button height problem in Firefox */
+            .tfbutton::-moz-focus-inner {
+              border: 0;
+            }
+            .tfclear{
+                clear:both;
+            }
+        </style>
+
+
+    <body>
+        <div id="searchbar">
+            <div style="position: absolute; right: 10px; top: 20px; width: 400px; height: 30px">
+                <form action="http://127.0.0.1:5000" id="tfnewsearch" method="POST" target="_blank">
+                        <input type="text" class="tftextinput" name="k" size="30" maxlength="120">
+                        <input type="submit" name = "my-search" value="Submit" class="tfbutton">
+                </form>
+                <div class="tfclear"></div>
+            </div>
+        </div>
+
+        <div id="filters">
+            <div id="heptagon">
+                <div style="position: absolute; left: 60px; top: 40px;width: 150px; height: 150px">
+                    <img src="heptagon.png" alt="Heptagon" style="width: 150px; height: 150px">
+                </div>
+            </div>
+            <div id="MFCfilter">
+                <div style="position: absolute; left: 25px; top: 70px; width: 10px; height: 10px">
+                    <button id="restore" onClick="MFCfilter();"> MFC </button>
+                </div>
+            </div>
+            <div id="Aeronauticsfilter">
+                <div style="position: absolute; left: 95px; top: 20px; width: 10px; height: 10px">
+                    <button id="restore" onClick="Aeronauticsfilter();"> Aeronautics </button>
+                </div>
+            </div>
+            <div id="MSTfilter">
+                <div style="position: absolute; left: 200px; top: 70px; width: 10px; height: 10px">
+                    <button id="restore" onClick="MSTfilter();"> MST </button>
+                </div>
+            </div>
+            <div id="SSfilter">
+                <div style="position: absolute; left: 220px; top: 110px; width: 10px; height: 10px">
+                    <button id="restore" onClick="SSfilter();"> Space Systems </button>
+                </div>
+            </div>
+            <div id="ISGSfilter">
+                <div style="position: absolute; left: 25; top: 120px; width: 10px; height: 10px">
+                    <button id="restore" onClick="ISGSfilter();"> IS&GS </button>
+                </div>
+            </div>
+            <div id="LMIfilter">
+                <div style="position: absolute; left: 50; top: 170px; width: 10px; height: 10px">
+                    <button id="restore" onClick="LMIfilter();"> LM International</button>
+                </div>
+            </div>
+            <div id="EOfilter">
+                <div style="position: absolute; left: 180px; top: 170px; width: 10px; height: 10px">
+                    <button id="restore" onClick="EOfilter();"> Enterprise Operations</button>
+                </div>
+            </div>
+            <div id="LMResourcesfilter">
+                <div style="position: absolute; left: 95px; top: 100px; width: 10px; height: 10px">
+                    <button id="restore" onClick="LMResourcesfilter();"> Resources </button>
+                </div>
+            <div id="restoresubunitsfilter">
+                <div style="position: absolute; left: 95px; top: 140px; width: 10px; height: 10px">
+                    <button id="restore" onClick="restoreSubunits();"> LMCOville </button>
+                </div>
+            </div>
+            <div id="Subcontractorfilter">
+                <div style="position: absolute; left: 260px; top: 40px; width: 10px; height: 10px">
+                    <button id="restore" onClick="Subcontractorfilter();"> Subcontractors </button>
+                </div>
+            </div>
+            <div id="Supplierfilter">
+                <div style="position: absolute; left: 350px; top: 10px; width: 10px; height: 10px">
+                    <button id="restore" onClick="Supplierfilter();"> Suppliers </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="fade" class="black_overlay"></div>
+
+        <div id="F35floors">
+            <div id="F35floor20" class="white_content">Rooms on this floor!
+                <p><a target = "_blank" href="file:///C:\three.js\LMCOville\Floors\F35\F35floor20room1.html">Room 1</a>
+                <p><a target = "_blank" href="http://lockheedmartin.com"> Room 2 </a></p>
+                <p><a target = "_blank" href="http://lockheedmartin.com"> Room 3 </a></p>
+                <p><a target = "_blank" href="http://lockheedmartin.com"> Room 4 </a></p>
+                <p><a target = "_blank" href="http://lockheedmartin.com"> Room 5 </a></p>
+                <img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px" class="opacity"
+                onclick="document.getElementById('F35floor20').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+            </div>
+
+        </div>
+    </div>
+
+        <div id="TextBoxes">
+            <div id="F35Box" class="white_content">Meet the F35 Group!
+                <p> Click <a target = "_blank"href="http://lockheedmartin.com/us/products/f35.html"> here</a>  to learn more </p>
+                <img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px" class="opacity"
+                onclick="document.getElementById('F35Box').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+            </div>
+
+            <div id="SkunkWorksBox" class="white_content">Meet the innovative and brilliant Skunk Works Team!
+                <p id="SkunkWorksText"> Click <a target = "_blank"href="http://www.lockheedmartin.com/us/aeronautics/skunkworks.html"> here</a>  to learn more </p>
+                <img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px"
+                onclick="document.getElementById('SkunkWorksBox').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+            </div>
+
+            <div id="C5Box" class="white_content">Those behind the C-5 Galaxy Military Transport Aircraft!
+                <p> Click <a target = "_blank"href="http://www.lockheedmartin.com/us/products/c5.html"> here</a>  to learn more </p>
+                <p> Sally Sells Sea Shells by the Sea Shore. Peter Piper Picked a Peck of Pickled Peppers. How Much Wood could a Woodchuck Chuck if a Woodchuck could Chuck Wood? </p>
+                <img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px"
+                onclick="document.getElementById('C5Box').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+            </div>
+            <div id="floorBox" class="white_content">
+                <p id="floortext"> failed </p>
+                <img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px"
+                onclick="document.getElementById('floorBox').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+            </div>
+        </div>
+
+
+
+
+        <script src="three.min.js"></script>
+        <script src="OrbitControls.js"></script>
+        <script src="TrackballControls.js"></script>
+        <script src="gentilis_bold.typeface.js"></script>
+        <script src="gentilis_regular.typeface.js"></script>
+        <script src="optimer_bold.typeface.js"></script>
+        <script src="optimer_regular.typeface.js"></script>
+        <script src="helvetiker_regular.typeface.js"></script>
+        <script src="helvetiker_bold.typeface.js"></script>
+        <script src="Detector.js"></script>
+        <script src="THREEx.FullScreen.js"></script>
+        <script src="threex.keyboardstate.js"></script>
+        <script src="threex.domevents.js"></script>
+        <script src="THREEx.WindowResize.js"></script>
+
+
+        <!-- Custom shaders for particle effects -->
+        <script type="x-shader/x-vertex" id="vertexshader">
+        uniform float time;
+        attribute vec3 customColor;
+        varying vec3 vColor;
+        void main()
+        {
+            vColor = customColor; // set color associated to vertex; use later in fragment shader.
+
+            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+            // option (1): draw particles at constant size on screen
+            // gl_PointSize = size;
+            // option (2): scale particles as objects in 3D space
+            gl_PointSize = 40.0 * ( 300.0 / length( mvPosition.xyz ) );
+            gl_Position = projectionMatrix * mvPosition;
+        }
+        </script>
+
+        <script type="x-shader/x-fragment" id="fragmentshader">
+        uniform sampler2D texture;
+        varying vec3 vColor; // colors associated to vertices, assigned by vertex shader
+        void main()
+        {
+            // calculates a color for the particle
+            gl_FragColor = vec4( vColor, 1.0 );
+            // sets a white particle texture to desired color
+            gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+        }
+        </script>
+<!-- end of custom shaders -->
+
+
+        <script>
+            var keyboard = new THREEx.KeyboardState();
+            var AeronauticsCamera
+            var AeronauticsCameraActive = false;
+            var clock = new THREE.Clock();
+
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 50000);
+            var mapCamera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 10000);
+
+            var mouseActive = true;
+
+            var MFCactive = true;
+            var Aeronauticsactive = true;
+            var MSTactive = true;
+            var SSactive = true;
+            var ISGSactive = true;
+            var LMIactive = true;
+            var EOactive = true;
+            var LMResourcesactive = true;
+            var Subcontractoractive = true;
+            var Supplieractive = true;
+
+
+        // RENDERER
+            var renderer
+            if ( Detector.webgl )
+                renderer = new THREE.WebGLRenderer( {antialias:true} );
+            else
+                renderer = new THREE.CanvasRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            //global variables
+            var rad = 700
+            var rad2 = 1200
+            var rad3 = 1700
+            var rad4 = 2000
+            var small = 120
+            var medium = 180
+            var large = 225
+            var verylarge = 500
+            var width = 85
+            var floorheight = 14
+
+            var raycaster = new THREE.Raycaster();
+            var mouse = new THREE.Vector2();
+
+            var floorsList = [];
+            var targetList = [];
+            var targetList1 = [];
+            var targetList2 = [];
+            var projector, mouse = { x:0, y:0 }
+            var INTERSECTED
+
+
+            THREEx.WindowResize(renderer, camera);
+            THREEx.FullScreen.bindKey({ charCode: '`'.charCodeAt(0) });
+
+
+
+
+                renderer.autoClear = false
+
+                scene.add(camera);
+                var controls = new THREE.OrbitControls( camera, renderer.domElement );
+                controls.rotateSpeed = 0.6;
+                controls.zoomSpeed = 1.5;
+                controls.panSpeed = 0.8;
+                controls.noZoom = false;
+                controls.noPan = true;
+                controls.staticMoving = true;
+                controls.dynamicDampingFactor = 0.3;
+                controls.minDistance = -600;
+                controls.maxDistance = 3000;
+                // controls.minPolarAngle = 0.8*Math.PI/3
+                controls.maxPolarAngle = 1.55*Math.PI/3
+                camera.position.set(0, 3000, 0);
+                camera.lookAt(new THREE.Vector3(0, 200, 0));
+
+
+////////////////FIXED ORBIT CONTROLS FOCUS POINT
+                controls.target.copy( new THREE.Vector3(0, 200, 0) );
+
+
+                //GRASS
+                var grassGeo = new THREE.PlaneGeometry(50000, 50000, 10, 10);
+                var grassMat = new THREE.MeshLambertMaterial({color:0x19A319, side: THREE.DoubleSide});
+                var grass = new THREE.Mesh(grassGeo, grassMat);
+                grass.position.y = -10
+                grass.rotation.x = Math.PI / 2;
+                scene.add(grass);
+
+                //SKYBOX
+                var skyBoxGeo = new THREE.BoxGeometry(50000, 50000, 50000);
+                var skyBoxMat = new THREE.MeshBasicMaterial({color: 0x00CCFF, side: THREE.BackSide});
+                var skyBox = new THREE.Mesh(skyBoxGeo, skyBoxMat);
+                scene.add(skyBox);
+
+                //LIGHTS
+                var light = new THREE.PointLight(0xffffff);
+                light.position.set(30,300,40);
+                scene.add(light);
+                var ambientlight = new THREE.AmbientLight( 0xA1A1A1 ); // soft white light
+                scene.add( ambientlight );
+
+                //BUILDING TEXTURE
+                var texture       = new THREE.Texture( generateTexture() );
+                texture.anisotropy = renderer.getMaxAnisotropy();
+                texture.needsUpdate    = true;
+
+                //BUILDING MATERIAL
+                var buildingMaterial  = new THREE.MeshFaceMaterial([
+                    new THREE.MeshLambertMaterial({map : texture,}),
+                    new THREE.MeshLambertMaterial({map : texture,}),
+                    new THREE.MeshLambertMaterial({color: Math.random() * 0x000000}),
+                    new THREE.MeshBasicMaterial({color: 0xffffff}),
+                    new THREE.MeshLambertMaterial({map : texture,}),
+                    new THREE.MeshLambertMaterial({map : texture,})
+                    ]);
+
+
+
+                function generateTexture() {
+                // build a small canvas 32x64 and paint it in white
+                    var canvas  = document.createElement( 'canvas' );
+                    canvas.width = 32;
+                    canvas.height    = 64;
+                    var context = canvas.getContext( '2d' );
+                    // plain it in white
+                    context.fillStyle    = '#ffffff';
+                    context.fillRect( 0, 0, 32, 64 );
+                    // draw the window rows - with a small noise to simulate light variations in each room
+                    for( var y = 2; y < 64; y += 2 ){
+                        for( var x = 0; x < 32; x += 2 ){
+                            var value   = Math.floor( Math.random() * 64 );
+                            context.fillStyle = 'rgb(' + [value, value, value].join( ',' )  + ')';
+                            context.fillRect( x, y, 2, 1 );
+                        }
+                    }
+                    // build a bigger canvas and copy the small one in it
+                    // This is a trick to upscale the texture without filtering
+                    var canvas2 = document.createElement( 'canvas' );
+                    canvas2.width    = 512;
+                    canvas2.height   = 1024;
+                    var context = canvas2.getContext( '2d' );
+                    // disable smoothing
+                    context.imageSmoothingEnabled        = false;
+                    context.imageSmoothingEnabled  = false;
+                    context.mozImageSmoothingEnabled = false;
+                    // then draw the image
+                    context.drawImage( canvas, 0, 0, canvas2.width, canvas2.height );
+                    // return the just built canvas2
+                    return canvas2;
+                }
+
+
+                //CENTER PLATFORMS
+                var cylindergeo = new THREE.CylinderGeometry(rad, rad, 1, 50, 50);
+                var cylindermat = new THREE.MeshLambertMaterial({color:0x4D4D4D});
+                var cylinder = new THREE.Mesh(cylindergeo, cylindermat);
+                scene.add(cylinder);
+
+                var ringgeo = new THREE.RingGeometry(rad, rad2,100);
+                var ringmat = new THREE.MeshLambertMaterial({color:0x6F6F6F});
+                var ring = new THREE.Mesh(ringgeo, ringmat);
+                ring.rotation.x = 3*Math.PI/2
+                scene.add(ring);
+
+                var ringgeo2 = new THREE.RingGeometry(rad2, rad3, 100);
+                var ringmat2 = new THREE.MeshLambertMaterial({color:0x8F8F8F})
+                var ring2 = new THREE.Mesh(ringgeo2, ringmat2);
+                ring2.rotation.x = 3*Math.PI/2
+                scene.add(ring2);
+
+                var ringgeo3 = new THREE.RingGeometry(rad3, rad4, 100);
+                var ringmat3 = new THREE.MeshLambertMaterial({color:0xADADAD})
+                var ring3 = new THREE.Mesh(ringgeo3, ringmat3);
+                ring3.rotation.x = 3*Math.PI/2;
+                scene.add(ring3);
+
+
+    ////////////UNIT TITLES
+                //AERONAUTICS TEXT
+                var AeronauticsText = "Aeronautics";
+                var hash = document.location.hash.substr( 1 );
+
+                var materialFront = new THREE.MeshBasicMaterial({color: 0xffff00});
+                var materialSide = new THREE.MeshBasicMaterial({color: 0x000088});
+                var materialArray = [materialFront, materialSide];
+
+
+                if (hash.length !== 0 ) {
+                    AeronauticsText = hash
+                }
+
+                var text3d = new THREE.TextGeometry( AeronauticsText, {
+                    size:30, height: 5, curveSegments:3,
+                    font: "helvetiker", weight: "bold", style: "normal",
+                    bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+                    material: 0, extrudeMaterial: 1
+                });
+                text3d.computeBoundingBox();
+
+                var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+                var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+                wordtext = new THREE.Mesh(text3d, textMaterial);
+                wordtext.position.set(centerOffset, 15, -rad + 50);
+                wordtext.rotation.y = Math.PI*2
+                //wordtext.rotation.x = -Math.PI/8
+                var group = new THREE.Group()
+                group.add( wordtext );
+                scene.add(group);
+
+                //MISSILES AND FIRE CONTROL TEXT
+                var MFCText = "Missiles and Fire Control";
+
+                var materialFront = new THREE.MeshBasicMaterial({color: 0xFFAAAF});
+                var materialSide = new THREE.MeshBasicMaterial({color: 0xF00000});
+                var materialArray = [materialFront, materialSide];
+
+
+                if (hash.length !== 0 ) {
+                    MFCText = hash
+                }
+
+                var text3d = new THREE.TextGeometry( MFCText, {
+                    size:25, height: 5, curveSegments:3,
+                    font: "helvetiker", weight: "bold", style: "normal",
+                    bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+                    material: 0, extrudeMaterial: 1
+                });
+                text3d.computeBoundingBox();
+
+                var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+                var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+                wordtext = new THREE.Mesh(text3d, textMaterial);
+                wordtext.position.set(centerOffset-(rad*.65), 15, -rad*.23);
+                wordtext.rotation.y = 2.1*Math.PI/7
+                var group = new THREE.Group()
+                group.add( wordtext );
+                scene.add(group);
+
+                //MISSION AND SYSTEMS TRAINING TEXT
+                var MSTText = "Mission and Systems Training";
+
+                var materialFront = new THREE.MeshBasicMaterial({color: 0xFFC800});
+                var materialSide = new THREE.MeshBasicMaterial({color: 0xFF6400});
+                var materialArray = [materialFront, materialSide];
+
+
+                if (hash.length !== 0 ) {
+                    MSTText = hash
+                }
+
+                var text3d = new THREE.TextGeometry( MSTText, {
+                    size:22, height: 5, curveSegments:3,
+                    font: "helvetiker", weight: "bold", style: "normal",
+                    bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+                    material: 0, extrudeMaterial: 1
+                });
+                text3d.computeBoundingBox();
+
+                var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+                var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+                wordtext = new THREE.Mesh(text3d, textMaterial);
+                wordtext.position.set(-centerOffset+(rad*.29), 15, -rad*.75);
+                //centerOffset-(rad*.65), 15, -rad*.15 + 10
+                wordtext.rotation.y = -2.1*Math.PI/7
+                var group = new THREE.Group()
+                group.add( wordtext );
+                scene.add(group);
+
+                //SPACE SYSTEMS TEXT
+                var SSText = "Space Systems";
+
+                var materialFront = new THREE.MeshBasicMaterial({color: 0x64FF64});
+                var materialSide = new THREE.MeshBasicMaterial({color: 0x00A600});
+                var materialArray = [materialFront, materialSide];
+
+
+                if (hash.length !== 0 ) {
+                    MSTText = hash
+                }
+
+                var text3d = new THREE.TextGeometry( SSText, {
+                    size:30, height: 5, curveSegments:3,
+                    font: "helvetiker", weight: "bold", style: "normal",
+                    bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+                    material: 0, extrudeMaterial: 1
+                });
+                text3d.computeBoundingBox();
+
+                var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+                var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+                wordtext = new THREE.Mesh(text3d, textMaterial);
+                wordtext.position.set(-centerOffset+(rad*.75), 15, rad*.02);
+                wordtext.rotation.y = -3.9*Math.PI/7
+                var group = new THREE.Group()
+                group.add( wordtext );
+                scene.add(group);
+
+
+                //INFORMATION AND GLOBAL SOLUTIONS TEXT
+                var ISGSText = "Information Systems and Global Solutions";
+
+                var materialFront = new THREE.MeshBasicMaterial({color: 0xB45AB4});
+                var materialSide = new THREE.MeshBasicMaterial({color: 0x780078});
+                var materialArray = [materialFront, materialSide];
+
+
+                if (hash.length !== 0 ) {
+                    ISGSText = hash
+                }
+
+                var text3d = new THREE.TextGeometry( ISGSText, {
+                    size:18, height: 5, curveSegments:3,
+                    font: "helvetiker", weight: "bold", style: "normal",
+                    bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+                    material: 0, extrudeMaterial: 1
+                });
+                text3d.computeBoundingBox();
+
+                var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+                var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+                wordtext = new THREE.Mesh(text3d, textMaterial);
+                wordtext.position.set(centerOffset-(rad*.50), 15, rad*.57);
+                wordtext.rotation.y = 3.9*Math.PI/7
+                var group = new THREE.Group()
+                group.add( wordtext );
+                scene.add(group);
+
+
+    //////////SPRITE SUB UNIT TITLES
+            function makeTextSprite( message, parameters )
+            {
+                if ( parameters === undefined ) parameters = {};
+
+                var fontface = parameters.hasOwnProperty("fontface") ?
+                    parameters["fontface"] : "Arial";
+
+                var fontsize = parameters.hasOwnProperty("fontsize") ?
+                    parameters["fontsize"] : 18;
+
+                var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+                    parameters["borderThickness"] : 4;
+
+                var borderColor = parameters.hasOwnProperty("borderColor") ?
+                    parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+
+                var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+                    parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+
+                //var spriteAlignment = THREE.SpriteAlignment.topLeft;
+
+                var canvas = document.createElement('canvas');
+                var context = canvas.getContext('2d');
+                context.font = "Bold " + fontsize + "px " + fontface;
+
+                // get size data (height depends only on font size)
+                var metrics = context.measureText( message );
+                var textWidth = metrics.width;
+
+                // background color
+                context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
+                                              + backgroundColor.b + "," + backgroundColor.a + ")";
+                // border color
+                context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+                                              + borderColor.b + "," + borderColor.a + ")";
+
+                context.lineWidth = borderThickness;
+                roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+                // 1.4 is extra height factor for text below baseline: g,j,p,q.
+
+                // text color
+                context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+                context.fillText( message, borderThickness, fontsize + borderThickness);
+
+                // canvas contents will be used for a texture
+                var texture = new THREE.Texture(canvas)
+                texture.needsUpdate = true;
+
+                var spriteMaterial = new THREE.SpriteMaterial(
+                    { map: texture, useScreenCoordinates: false});// alignment: spriteAlignment } );
+                var sprite = new THREE.Sprite( spriteMaterial );
+                sprite.scale.set(100,50,1.0);
+                return sprite;
+            }
+
+            // function for drawing rounded rectangles
+            function roundRect(ctx, x, y, w, h, r)
+            {
+                ctx.beginPath();
+                ctx.moveTo(x+r, y);
+                ctx.lineTo(x+w-r, y);
+                ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+                ctx.lineTo(x+w, y+h-r);
+                ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+                ctx.lineTo(x+r, y+h);
+                ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+                ctx.lineTo(x, y+r);
+                ctx.quadraticCurveTo(x, y, x+r, y);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+
+    //////////////AERONAUTICS//
+                //F35
+                var F35Geo = new THREE.BoxGeometry(width, verylarge, width);
+                var F35 = new THREE.Mesh(F35Geo, buildingMaterial);
+                F35.position.set(0, verylarge/2, -(rad + width/2));
+                scene.add(F35);
+
+                var F35outlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var F35outline = new THREE.Mesh(F35Geo, F35outlinemat);
+                F35outline.scale.multiplyScalar(2);
+                F35outline.position.set(0, verylarge/2,-(rad + width/2));
+                //scene.add(F35outline);
+
+                var F35sprite = makeTextSprite( " F-35 ",
+                    { fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                F35sprite.position.set(20, verylarge + 20, -rad);
+                scene.add( F35sprite );
+
+
+                F35sprite.callback = function() {
+                    document.getElementById('F35Box').style
+                    .display='block';document.getElementById('fade').style.display='block';
+                    mouseActive = false}
+
+                //Skunk Works
+                var SkunkWorksGeo = new THREE.BoxGeometry(width, medium, width);
+                var SkunkWorks = new THREE.Mesh(SkunkWorksGeo, buildingMaterial);
+                SkunkWorks.position.set(width+10, medium/2, -(rad + width/2));
+                scene.add(SkunkWorks);
+
+                var SkunkWorksoutlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var SkunkWorksoutline = new THREE.Mesh(SkunkWorksGeo, SkunkWorksoutlinemat);
+                SkunkWorksoutline.scale.multiplyScalar(1.07);
+                SkunkWorksoutline.position.set(width+10, medium/2, -(rad + width/2));
+                //scene.add(SkunkWorksoutline);
+
+                var SkunkWorkssprite = makeTextSprite( " Skunk Works ",
+                    { fontsize: 40, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                SkunkWorkssprite.position.set(width + 15, medium + 10, -rad);
+                scene.add( SkunkWorkssprite );
+
+                SkunkWorkssprite.callback = function() {
+                    document.getElementById('SkunkWorksBox').style
+                    .display='block';document.getElementById('fade').style.display='block'                    }
+
+                //C-5
+                var C5Geo = new THREE.BoxGeometry(width, medium, width);
+                var C5 = new THREE.Mesh(C5Geo, buildingMaterial);
+                C5.position.set(-(width+10), medium/2, -(rad + width/2));
+                scene.add(C5);
+
+                var C5outlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var C5outline = new THREE.Mesh(C5Geo, C5outlinemat);
+                C5outline.scale.multiplyScalar(1.07);
+                C5outline.position.set(-(width+10), medium/2, -(rad + width/2));
+                //scene.add(C5outline);
+
+                var C5sprite = makeTextSprite( " C-5 ",
+                    { fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                C5sprite .position.set(-width + 15, medium + 10, -rad);
+                scene.add( C5sprite );
+
+
+                C5sprite.callback = function() {
+                    document.getElementById('C5Box').style
+                    .display='block';document.getElementById('fade').style.display='block'                    }
+
+
+
+                //C-130
+                var C130Geo = new THREE.BoxGeometry(width, medium, width);
+                var C130 = new THREE.Mesh(C130Geo, buildingMaterial);
+                C130.position.set(-2*(width+10), medium/2, -(rad + width/2));
+                scene.add(C130);
+
+                var C130outlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var C130outline = new THREE.Mesh(C130Geo, C130outlinemat);
+                C130outline.scale.multiplyScalar(1.07);
+                C130outline.position.set(-2*(width+10), medium/2, -(rad + width/2));
+                //scene.add(C130outline);
+
+                var C130sprite = makeTextSprite( " C-130 ",
+                    { fontsize: 60, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                C130sprite.position.set(-2*width, medium + 10, -rad);
+                scene.add( C130sprite );
+
+
+                //Integrated Fighter Group
+                var IFGGeo = new THREE.BoxGeometry(width, large, width);
+                var IFG = new THREE.Mesh(IFGGeo, buildingMaterial);
+                IFG.position.set(-3*(width+10), large/2, -(rad + width/2));
+                scene.add(IFG);
+
+                var IFGoutlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var IFGoutline = new THREE.Mesh(IFGGeo, IFGoutlinemat);
+                IFGoutline.scale.multiplyScalar(1.07);
+                IFGoutline.position.set(-3*(width+10), large/2, -(rad + width/2));
+                //scene.add(IFGoutline);
+
+                var IFGsprite = makeTextSprite( "Integrated Fighter Group",
+                    { fontsize: 23, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                IFGsprite.position.set(-3*width-19, large + 7, -rad);
+                scene.add( IFGsprite  );
+
+                //GREENVILLE AND FIELD TEAM OPERATIONS
+                var GreenvilleGeo = new THREE.BoxGeometry(width, medium, width);
+                var Greenville = new THREE.Mesh(GreenvilleGeo, buildingMaterial);
+                Greenville.position.set(2*(width+10), medium/2, -(rad + width/2));
+                scene.add(Greenville);
+
+                var Greenvilleoutlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var Greenvilleoutline = new THREE.Mesh(GreenvilleGeo, Greenvilleoutlinemat);
+                Greenvilleoutline.scale.multiplyScalar(1.07);
+                Greenvilleoutline.position.set(2*(width+10), medium/2, -(rad + width/2));
+                //scene.add(Greenvilleoutline);
+
+                var Greenvillesprite = makeTextSprite( "Greenville & Field Team",
+                    { fontsize: 26, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                Greenvillesprite.position.set(2*width + 20, medium + 5, -rad);
+                scene.add( Greenvillesprite);
+
+                //COMMERCIAL ENGINE SOLUTIONS
+                var CESGeo = new THREE.BoxGeometry(width, small, width);
+                var CES = new THREE.Mesh(CESGeo, buildingMaterial);
+                CES.position.set(3*(width+10), small/2, -(rad + width/2));
+                scene.add(CES);
+
+                var CESoutlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var CESoutline = new THREE.Mesh(CESGeo, CESoutlinemat);
+                CESoutline.scale.multiplyScalar(1.07);
+                CESoutline.position.set(3*(width+10), small/2, -(rad + width/2));
+                //scene.add(CESoutline);
+
+                var CESsprite= makeTextSprite( "Comm. Engine Solutions",
+                    { fontsize: 26, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                CESsprite.position.set(3*width + 30, small, -rad);
+                scene.add( CESsprite);
+
+                //P-3 ORION
+                var P3Geo = new THREE.BoxGeometry(width, medium, width);
+                var P3 = new THREE.Mesh(P3Geo, buildingMaterial);
+                P3.position.set(4*(width+10), medium/2, -(rad + width/2));
+                scene.add(P3);
+
+                var P3outlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var P3outline = new THREE.Mesh(P3Geo, P3outlinemat);
+                P3outline.scale.multiplyScalar(1.07);
+                P3outline.position.set(4*(width+10), medium/2, -(rad + width/2));
+                //scene.add(P3outline);
+
+                var P3sprite = makeTextSprite( "P-3 Orion",
+                    { fontsize: 50, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                P3sprite.position.set(4*width + 30, medium + 5, -rad);
+                scene.add( P3sprite );
+
+                //U-2 DRAGON LADY
+                var U2Geo = new THREE.BoxGeometry(width, medium, width);
+                var U2 = new THREE.Mesh(U2Geo, buildingMaterial);
+                U2.position.set(-4*(width+10), medium/2, -(rad + width/2));
+                scene.add(U2);
+
+                var U2outlinemat = new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.BackSide});
+                var U2outline = new THREE.Mesh(U2Geo, U2outlinemat);
+                U2outline.scale.multiplyScalar(1.07);
+                U2outline.position.set(-4*(width+10), medium/2, -(rad + width/2));
+                //scene.add(U2outline);
+
+                var U2sprite = makeTextSprite( "U-2 Dragon Lady",
+                    { fontsize: 35, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+                U2sprite.position.set(-4*width-40, medium + 7, -rad);
+                scene.add( U2sprite );
+
+
+    ////////////MISSILES AND FIRE CONTROL//
+                //Advanced/Special Programs
+                var AdvancedGeo = new THREE.BoxGeometry(width, medium, width);
+                var Advanced = new THREE.Mesh(AdvancedGeo, buildingMaterial);
+                Advanced.position.set(-rad*.81, medium/2, -rad*.68);
+                Advanced.rotation.y = 2.1*Math.PI/7
+                scene.add(Advanced);
+
+                var Advancedoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF4545, side: THREE.BackSide});
+                var Advancedoutline = new THREE.Mesh(AdvancedGeo, Advancedoutlinemat);
+                Advancedoutline.scale.multiplyScalar(1.07);
+                Advancedoutline.position.set(-rad*.81, medium/2, -rad*.68);
+                Advancedoutline.rotation.y = 2.1*Math.PI/7
+                scene.add(Advancedoutline);
+
+                var Advancedsprite = makeTextSprite( "Advanced Programs",
+                    { fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+                Advancedsprite.position.set(-rad*.82+4, medium + 5, -rad*.7);
+                scene.add( Advancedsprite  );
+
+
+                //Air and Missile Defense
+                var AirAndMissileGeo = new THREE.BoxGeometry(width, large, width);
+                var AirAndMissile = new THREE.Mesh(AirAndMissileGeo, buildingMaterial);
+                AirAndMissile.position.set(-rad*.905, large/2, -rad*.57);
+                AirAndMissile.rotation.y = 2.1*Math.PI/7
+                scene.add(AirAndMissile);
+
+                var AirAndMissileoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF4545, side: THREE.BackSide});
+                var AirAndMissileoutline = new THREE.Mesh(AirAndMissileGeo, AirAndMissileoutlinemat);
+                AirAndMissileoutline.scale.multiplyScalar(1.07);
+                AirAndMissileoutline.position.set(-rad*.905, large/2, -rad*.57);
+                AirAndMissileoutline.rotation.y = 2.1*Math.PI/7
+                scene.add(AirAndMissileoutline);
+
+                var AirAndMissilesprite = makeTextSprite( "Air&Missile Def.",
+                    { fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+                AirAndMissilesprite.position.set(-rad*.905+5, large + 5, -rad*.57-2);
+                scene.add( AirAndMissilesprite );
+
+                //FIRE CONTROL AND LOGISTICS SUPPORT SERVICES
+                var FCGeo = new THREE.BoxGeometry(width, large, width);
+                var FC = new THREE.Mesh(FCGeo, buildingMaterial);
+                FC.position.set(-rad*.9805, large/2, -rad*.4505);
+                FC.rotation.y = 2.1*Math.PI/7
+                scene.add(FC);
+
+                var FCoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF4545, side: THREE.BackSide});
+                var FCoutline = new THREE.Mesh(FCGeo, FCoutlinemat);
+                FCoutline.scale.multiplyScalar(1.07);
+                FCoutline.position.set(-rad*.9805, large/2, -rad*.4505);
+                FCoutline.rotation.y = 2.1*Math.PI/7
+                scene.add(FCoutline);
+
+                var FCsprite= makeTextSprite( "Fire Control & Log.",
+                    { fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+                FCsprite.position.set(-rad*.9805, large + 5, -rad*.4505);
+                scene.add( FCsprite );
+
+                //TECHNICAL SERVICES
+                var TSGeo = new THREE.BoxGeometry(width, small, width);
+                var TS = new THREE.Mesh(TSGeo, buildingMaterial);
+                TS.position.set(-rad*1.05, small/2, -rad*.33);
+                TS.rotation.y = 2.1*Math.PI/7
+                scene.add(TS);
+
+                var TSoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF4545, side: THREE.BackSide});
+                var TSoutline = new THREE.Mesh(TSGeo, TSoutlinemat);
+                TSoutline.scale.multiplyScalar(1.07);
+                TSoutline.position.set(-rad*1.05, small/2, -rad*.33);
+                TSoutline.rotation.y = 2.1*Math.PI/7
+                scene.add(TSoutline);
+
+                var TSsprite = makeTextSprite( "Technical Serv.",
+                    { fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+                TSsprite.position.set(-rad*1.05+5, small + 5, -rad*.35+7);
+                scene.add( TSsprite );
+
+
+                //TACTICAL MISSILES AND COMBAT MANEUVER SYSTEMS
+                var TMGeo = new THREE.BoxGeometry(width, large, width);
+                var TM = new THREE.Mesh(TMGeo, buildingMaterial);
+                TM.position.set(-rad*.72, large/2, -rad*.8);
+                TM.rotation.y = 2.1*Math.PI/7
+                scene.add(TM);
+
+                var TMoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF4545, side: THREE.BackSide});
+                var TMoutline = new THREE.Mesh(TMGeo, TMoutlinemat);
+                TMoutline.scale.multiplyScalar(1.07);
+                TMoutline.position.set(-rad*.72, large/2, -rad*.8);
+                TMoutline.rotation.y = 2.1*Math.PI/7
+                scene.add(TMoutline);
+
+                var TMsprite = makeTextSprite( "Tactical Missiles & Comb.",
+                    { fontsize: 25, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+                TMsprite.position.set(-rad*.72-5, large + 5, -rad*.8-5);
+                scene.add( TMsprite );
+
+
+    ////////////MISSION AND SYSTEMS TRAINING
+                //INTEGRATED WARFARE SYSTEMS AND SENSORS
+                var IWGeo = new THREE.BoxGeometry(width, large, width);
+                var IW = new THREE.Mesh(IWGeo, buildingMaterial);
+                IW.position.set(rad*.72, large/2, -rad*.8);
+                IW.rotation.y = -2.1*Math.PI/7
+                scene.add(IW);
+
+                var IWoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF9900, side: THREE.BackSide});
+                var IWoutline = new THREE.Mesh(IWGeo, IWoutlinemat);
+                IWoutline.scale.multiplyScalar(1.07);
+                IWoutline.position.set(rad*.72, large/2, -rad*.8);
+                IWoutline.rotation.y = -2.1*Math.PI/7
+                scene.add(IWoutline);
+
+                var IWsprite = makeTextSprite( "Integrated Warfare",
+                    { fontsize: 30, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+                IWsprite.position.set(rad*.72-4, large + 5, -rad*.8);
+                scene.add( IWsprite );
+
+                //SHIP & AVIATION SYSTEMS
+                var SAGeo = new THREE.BoxGeometry(width, medium, width);
+                var SA = new THREE.Mesh(SAGeo, buildingMaterial);
+                SA.position.set(rad*.81, medium/2, -rad*.68);
+                SA.rotation.y = -2.1*Math.PI/7
+                scene.add(SA);
+
+                var SAoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF9900, side: THREE.BackSide});
+                var SAoutline = new THREE.Mesh(SAGeo, SAoutlinemat);
+                SAoutline.scale.multiplyScalar(1.07);
+                SAoutline.position.set(rad*.81, medium/2, -rad*.68);
+                SAoutline.rotation.y = -2.1*Math.PI/7
+                scene.add(SAoutline);
+
+                var SAsprite = makeTextSprite( "Ship & Aviation Sys",
+                    { fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+                SAsprite.position.set(rad*.81+4, medium + 5, -rad*.68+5);
+                scene.add( SAsprite );
+
+                //SUSTAINABILITY TECHNOLOGIES
+                var SustainGeo = new THREE.BoxGeometry(width, small, width);
+                var Sustain = new THREE.Mesh(SustainGeo, buildingMaterial);
+                Sustain.position.set(rad*.905, small/2, -rad*.57);
+                Sustain.rotation.y = -2.1*Math.PI/7
+                scene.add(Sustain);
+
+                var Sustainoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF9900, side: THREE.BackSide});
+                var Sustainoutline = new THREE.Mesh(SustainGeo, Sustainoutlinemat);
+                Sustainoutline.scale.multiplyScalar(1.07);
+                Sustainoutline.position.set(rad*.905, small/2, -rad*.57);
+                Sustainoutline.rotation.y = -2.1*Math.PI/7
+                scene.add(Sustainoutline);
+
+                var Sustainsprite = makeTextSprite( "Sustainability Tech.",
+                    { fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+                Sustainsprite.position.set(rad*.905+4, small + 5, -rad*.57+5);
+                scene.add( Sustainsprite );
+
+                //TRAINING AND LOGISTICS SOLUTIONS
+                var TLGeo = new THREE.BoxGeometry(width, large, width);
+                var TL = new THREE.Mesh(TLGeo, buildingMaterial);
+                TL.position.set(rad*.9805, large/2, -rad*.4505);
+                TL.rotation.y = -2.1*Math.PI/7
+                scene.add(TL);
+
+                var TLoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF9900, side: THREE.BackSide});
+                var TLoutline = new THREE.Mesh(TLGeo, TLoutlinemat);
+                TLoutline.scale.multiplyScalar(1.07);
+                TLoutline.position.set(rad*.9805, large/2, -rad*.4505);
+                TLoutline.rotation.y = -2.1*Math.PI/7
+                scene.add(TLoutline);
+
+                var TLsprite = makeTextSprite( "Training and Logistics",
+                    { fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+                TLsprite.position.set(rad*.9805+4, large + 5, -rad*.4505+5);
+                scene.add( TLsprite );
+
+                //UNDERSEA SYSTEMS
+                var USGeo = new THREE.BoxGeometry(width, medium, width);
+                var US = new THREE.Mesh(USGeo, buildingMaterial);
+                US.position.set(rad*1.05, medium/2, -rad*.33);
+                US.rotation.y = -2.1*Math.PI/7
+                scene.add(US);
+
+                var USoutlinemat = new THREE.MeshBasicMaterial({color: 0xFF9900, side: THREE.BackSide});
+                var USoutline = new THREE.Mesh(USGeo, USoutlinemat);
+                USoutline.scale.multiplyScalar(1.07);
+                USoutline.position.set(rad*1.05, medium/2, -rad*.33);
+                USoutline.rotation.y = -2.1*Math.PI/7
+                scene.add(USoutline);
+
+                var USsprite = makeTextSprite( "Undersea Systems",
+                    { fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+                USsprite.position.set(rad*1.05, medium + 5, -rad*.33+10);
+                scene.add( USsprite );
+
+
+    ////////////SPACE SYSTEMS
+                //Advanced Technology Center
+                var ATCGeo = new THREE.BoxGeometry(width, large, width);
+                var ATC = new THREE.Mesh(ATCGeo, buildingMaterial);
+                ATC.position.set(rad*1.05, large/2, rad*.20);
+                ATC.rotation.y = -3.9*Math.PI/7
+                scene.add(ATC);
+
+                var ATCoutlinemat = new THREE.MeshBasicMaterial({color: 0x30FF30, side: THREE.BackSide});
+                var ATCoutline = new THREE.Mesh(ATCGeo, ATCoutlinemat);
+                ATCoutline.scale.multiplyScalar(1.07);
+                ATCoutline.position.set(rad*1.05, large/2, rad*.20);
+                ATCoutline.rotation.y = -3.9*Math.PI/7
+                scene.add(ATCoutline);
+
+                var ATCsprite = makeTextSprite( "Adv. Technology Center",
+                    { fontsize: 25, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+                ATCsprite.position.set(rad*1.05, large + 5, rad*.2);
+                scene.add( ATCsprite );
+
+
+                //Civil Space
+                var CSGeo = new THREE.BoxGeometry(width, medium, width);
+                var CS = new THREE.Mesh(CSGeo, buildingMaterial);
+                CS.position.set(rad*1.07, medium/2, rad*.06);
+                CS.rotation.y = -3.9*Math.PI/7
+                scene.add(CS);
+
+                var CSoutlinemat = new THREE.MeshBasicMaterial({color: 0x30FF30, side: THREE.BackSide});
+                var CSoutline = new THREE.Mesh(CSGeo, CSoutlinemat);
+                CSoutline.scale.multiplyScalar(1.07);
+                CSoutline.position.set(rad*1.07, medium/2, rad*.06);
+                CSoutline.rotation.y = -3.9*Math.PI/7
+                scene.add(CSoutline);
+
+                var CSsprite = makeTextSprite( "Civil Space",
+                    { fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+                CSsprite.position.set(rad*1.07, medium + 5, rad*.06 + 15);
+                scene.add( CSsprite );
+
+                //Commercial Space
+                var CommercialGeo = new THREE.BoxGeometry(width, medium, width);
+                var Commercial = new THREE.Mesh(CommercialGeo, buildingMaterial);
+                Commercial.position.set(rad*1.085, medium/2, -rad*.08);
+                Commercial.rotation.y = -3.9*Math.PI/7
+                scene.add(Commercial);
+
+                var Commercialoutlinemat = new THREE.MeshBasicMaterial({color: 0x30FF30, side: THREE.BackSide});
+                var Commercialoutline = new THREE.Mesh(CommercialGeo, Commercialoutlinemat);
+                Commercialoutline.scale.multiplyScalar(1.07);
+                Commercialoutline.position.set(rad*1.085, medium/2, -rad*.08);
+                Commercialoutline.rotation.y = -3.9*Math.PI/7
+                scene.add(Commercialoutline);
+
+                var Commercialsprite = makeTextSprite( "Commercial Space",
+                    { fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+                Commercialsprite.position.set(rad*1.085, medium + 5, -rad*.08);
+                scene.add( Commercialsprite );
+
+                //Military Space
+                var MilitaryGeo = new THREE.BoxGeometry(width, medium, width);
+                var Military = new THREE.Mesh(MilitaryGeo, buildingMaterial);
+                Military.position.set(rad*1.0295, medium/2, rad*.33);
+                Military.rotation.y = -3.9*Math.PI/7
+                scene.add(Military);
+
+                var Militaryoutlinemat = new THREE.MeshBasicMaterial({color: 0x30FF30, side: THREE.BackSide});
+                var Militaryoutline = new THREE.Mesh(MilitaryGeo, Militaryoutlinemat);
+                Militaryoutline.scale.multiplyScalar(1.07);
+                Militaryoutline.position.set(rad*1.0295, medium/2, rad*.33);
+                Militaryoutline.rotation.y = -3.9*Math.PI/7
+                scene.add(Militaryoutline);
+
+                var Militarysprite = makeTextSprite( "Military Space",
+                    { fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+                Militarysprite.position.set(rad*1.0295, medium + 5, rad*.35);
+                scene.add( Militarysprite );
+
+                //SMD
+                var SMDGeo = new THREE.BoxGeometry(width, small, width);
+                var SMD = new THREE.Mesh(SMDGeo, buildingMaterial);
+                SMD.position.set(rad*1, small/2, rad*.465);
+                SMD.rotation.y = -3.9*Math.PI/7
+                scene.add(SMD);
+
+                var SMDoutlinemat = new THREE.MeshBasicMaterial({color: 0x30FF30, side: THREE.BackSide});
+                var SMDoutline = new THREE.Mesh(SMDGeo, SMDoutlinemat);
+                SMDoutline.scale.multiplyScalar(1.07);
+                SMDoutline.position.set(rad*1, small/2, rad*.465);
+                SMDoutline.rotation.y = -3.9*Math.PI/7
+                scene.add(SMDoutline);
+
+                var SMDsprite = makeTextSprite( "SMD",
+                    { fontsize: 40, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+                SMDsprite.position.set(rad*1, small + 5, rad*.5);
+                scene.add( SMDsprite );
+
+                //Special Programs
+                var SPGeo = new THREE.BoxGeometry(width, large, width);
+                var SP = new THREE.Mesh(SPGeo, buildingMaterial);
+                SP.position.set(rad*.98, large/2, rad*.6);
+                SP.rotation.y = -3.9*Math.PI/7
+                scene.add(SP);
+
+                var SPoutlinemat = new THREE.MeshBasicMaterial({color: 0x30FF30, side: THREE.BackSide});
+                var SPoutline = new THREE.Mesh(SPGeo, SPoutlinemat);
+                SPoutline.scale.multiplyScalar(1.07);
+                SPoutline.position.set(rad*.98, large/2, rad*.6);
+                SPoutline.rotation.y = -3.9*Math.PI/7
+                scene.add(SPoutline);
+
+                var SPsprite = makeTextSprite( "Special Programs",
+                    { fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+                SPsprite.position.set(rad*.98, large + 5, rad*.6);
+                scene.add( SPsprite );
+
+
+////////////////INFORMATION SYSTEMS AND GLOBAL SOLUTIONS
+                //Civil IS&GS
+                var CISGeo = new THREE.BoxGeometry(width, medium, width);
+                var CIS = new THREE.Mesh(CISGeo, buildingMaterial);
+                CIS.position.set(-rad*1.07, medium/2, rad*.06);
+                CIS.rotation.y = 3.9*Math.PI/7
+                scene.add(CIS);
+
+                var CISoutlinemat = new THREE.MeshBasicMaterial({color: 0xA319A3, side: THREE.BackSide});
+                var CISoutline = new THREE.Mesh(CISGeo, CISoutlinemat);
+                CISoutline.scale.multiplyScalar(1.07);
+                CISoutline.position.set(-rad*1.07, medium/2, rad*.06);
+                CISoutline.rotation.y = 3.9*Math.PI/7
+                scene.add(CISoutline);
+
+                var CISsprite = makeTextSprite( "Civil ISGS",
+                    { fontsize: 40, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.8} } );
+                CISsprite.position.set(-rad*1.07, medium+5, rad*.06-10);
+                scene.add( CISsprite );
+
+                //Commercial Markets
+                var CMGeo = new THREE.BoxGeometry(width, large, width);
+                var CM = new THREE.Mesh(CMGeo, buildingMaterial);
+                CM.position.set(-rad*1.05, large/2, rad*.20);
+                CM.rotation.y = 3.9*Math.PI/7
+                scene.add(CM);
+
+                var CMoutlinemat = new THREE.MeshBasicMaterial({color: 0xA319A3, side: THREE.BackSide});
+                var CMoutline = new THREE.Mesh(CMGeo, CMoutlinemat);
+                CMoutline.scale.multiplyScalar(1.07);
+                CMoutline.position.set(-rad*1.05, large/2, rad*.20);
+                CMoutline.rotation.y = 3.9*Math.PI/7
+                scene.add(CMoutline);
+
+                var CMsprite = makeTextSprite( "Commercial Markets",
+                    { fontsize: 30, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
+                CMsprite.position.set(-rad*1.05, large + 2, rad*.20);
+                scene.add( CMsprite );
+
+                //Defense and Intelligence Solutions
+                var DISGeo = new THREE.BoxGeometry(width, small, width);
+                var DIS = new THREE.Mesh(DISGeo, buildingMaterial);
+                DIS.position.set(-rad*1.0295, small/2, rad*.33);
+                DIS.rotation.y = 3.9*Math.PI/7
+                scene.add(DIS);
+
+                var DISoutlinemat = new THREE.MeshBasicMaterial({color: 0xA319A3, side: THREE.BackSide});
+                var DISoutline = new THREE.Mesh(DISGeo, DISoutlinemat);
+                DISoutline.scale.multiplyScalar(1.07);
+                DISoutline.position.set(-rad*1.0295, small/2, rad*.33);
+                DISoutline.rotation.y = 3.9*Math.PI/7
+                scene.add(DISoutline);
+
+                var DISsprite = makeTextSprite( "Def. and Intel Solutions",
+                    { fontsize: 25, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
+                DISsprite.position.set(-rad*1.0295, small + 5, rad*.33);
+                scene.add( DISsprite );
+
+
+                //Global Solutions
+                var GSGeo = new THREE.BoxGeometry(width, small, width);
+                var GS = new THREE.Mesh(GSGeo, buildingMaterial);
+                GS.position.set(-rad*1, small/2, rad*.465);
+                GS.rotation.y = 3.9*Math.PI/7
+                scene.add(GS);
+
+                var GSoutlinemat = new THREE.MeshBasicMaterial({color: 0xA319A3, side: THREE.BackSide});
+                var GSoutline = new THREE.Mesh(GSGeo, GSoutlinemat);
+                GSoutline.scale.multiplyScalar(1.07);
+                GSoutline.position.set(-rad*1, small/2, rad*.465);
+                GSoutline.rotation.y = 3.9*Math.PI/7
+                scene.add(GSoutline);
+
+                var GSsprite = makeTextSprite( " Global Solutions ",
+                    { fontsize: 30, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
+                GSsprite.position.set(-rad*1, small + 5, rad*.465);
+                scene.add( GSsprite );
+
+////////////////LM INTERNATIONAL
+                //LM UK
+                var LMUKGeo = new THREE.BoxGeometry(width, large, width);
+                var LMUK = new THREE.Mesh(LMUKGeo, buildingMaterial);
+                LMUK.position.set(-rad*.585, large/2, rad*.915);
+                LMUK.rotation.y = 5.7*Math.PI/7
+                scene.add(LMUK);
+
+                //LM UAE
+                var LMUAEGeo = new THREE.BoxGeometry(width, large, width);
+                var LMUAE = new THREE.Mesh(LMUAEGeo, buildingMaterial);
+                LMUAE.position.set(-rad*.70, large/2, rad*.84);
+                LMUAE.rotation.y = 5.7*Math.PI/7
+                scene.add(LMUAE);
+
+                //LM Canada
+                var LMCGeo = new THREE.BoxGeometry(width, large, width);
+                var LMC = new THREE.Mesh(LMCGeo, buildingMaterial);
+                LMC.position.set(-rad*.46, large/2, rad*1.00);
+                LMC.rotation.y = 5.7*Math.PI/7
+                scene.add(LMC);
+
+////////////////ENTERPRISE OPERATIONS
+                //ATL
+                var ATLGeo = new THREE.BoxGeometry(width, large, width);
+                var ATL= new THREE.Mesh(ATLGeo, buildingMaterial);
+                ATL.position.set(rad*.585, large/2, rad*.915);
+                ATL.rotation.y = -6*Math.PI/7
+                scene.add(ATL);
+
+
+                //CHQ
+                var CHQGeo = new THREE.BoxGeometry(width, large, width);
+                var CHQ = new THREE.Mesh(CHQGeo, buildingMaterial);
+                CHQ.position.set(rad*.70, large/2, rad*.84);
+                CHQ.rotation.y = -6*Math.PI/7
+                scene.add(CHQ);
+
+                //Washington Operations
+                var WOGeo = new THREE.BoxGeometry(width, large, width);
+                var WO= new THREE.Mesh(WOGeo, buildingMaterial);
+                WO.position.set(rad*.46, large/2, rad*.98);
+                WO.rotation.y = -6*Math.PI/7
+                scene.add(WO);
+
+                //EBS
+                var EBSGeo = new THREE.BoxGeometry(width, large, width);
+                var EBS= new THREE.Mesh(EBSGeo, buildingMaterial);
+                EBS.position.set(rad*.34, large/2, rad*1.04);
+                EBS.rotation.y = -6*Math.PI/7
+                scene.add(EBS);
+
+                //CETO
+                var CETOGeo = new THREE.BoxGeometry(width, large, width);
+                var CETO= new THREE.Mesh(CETOGeo, buildingMaterial);
+                CETO.position.set(rad*.21, large/2, rad*1.09);
+                CETO.rotation.y = -6*Math.PI/7
+                scene.add(CETO);
+
+
+////////////LM RESOURCES
+            var LMResources = []
+            var LMRMisc = []
+            //var LMResourcesgeo = new THREE.CylinderGeometry(100, 100, 200, 30, 30);
+            //var LMResourcesmat = new THREE.MeshLambertMaterial( {color: 0x00CCCC});
+            //var LMResources = new THREE.Mesh(LMResourcesgeo, LMResourcesmat);
+            //LMResources.position.set(0, 100, 0);
+            //scene.add(LMResources);
+
+
+            function generateResources() {
+                //var rotation = Math.PI/2
+                scale = 85.2
+                x = scale
+                z = 0
+                for (i=0; i<4; i++) {
+                    var buildingGeom = new THREE.BoxGeometry(width, large, width);
+                    var buildingMate = new THREE.MeshLambertMaterial( {color: 0x00CCCC})
+                    var buildingGM = new THREE.Mesh(buildingGeom, buildingMate);
+                    scene.add(buildingGM);
+                    buildingGM.position.set(x, large/2, z);
+                    if (x==0 && z==-scale) {x-=scale; z+=scale};
+                    if (x==0 && z==scale) {z-=2*scale};
+                    if (x==scale && z==0) {x-=scale; z+=scale};
+                    LMResources.push(buildingGM);
+                }
+                var cylindergeo = new THREE.CylinderGeometry(scale + width/2, scale + width/2, 1, 50, 50);
+                var cylindermat = new THREE.MeshLambertMaterial({color:0x00A3A3});
+                var cylinder = new THREE.Mesh(cylindergeo, cylindermat);
+                //scene.add(cylinder);
+                cylinder.position.set(0, large, 0);
+                //LMRMisc.push(cylinder);
+
+                height = 30;
+                var cylinder2geo = new THREE.CylinderGeometry(30, scale+width/2, height, 50, 50);
+                var cylinder2mat = new THREE.MeshLambertMaterial({color: 0x00A3A3});
+                var cylinder2 = new THREE.Mesh(cylinder2geo, cylinder2mat);
+                scene.add(cylinder2);
+                LMRMisc.push(cylinder2);
+                cylinder2.position.set(0, large + height/2, 0);
+
+                var spherehalfgeo = new THREE.SphereGeometry(scale + width/2, 100, 50, 50, 3);
+                var spherehalfmat = new THREE.MeshLambertMaterial({color:0x00A3A3});
+                var spherehalf = new THREE.Mesh(spherehalfgeo, spherehalfmat);
+                //scene.add(spherehalf);
+                spherehalf.rotation.x = 3*Math.PI/2
+                spherehalf.position.set(0, large, 0);
+                //LMRMisc.push(spherehalf);
+
+            }
+
+            // generateResources();
+
+
+
+///////////FUNCTIONALITY BEGINS
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+            var testBuildings = [F35, SkunkWorks, C5];
+
+            var allSprites = [C130sprite, SkunkWorkssprite, CESsprite, F35sprite, IFGsprite,
+                            U2sprite, C5sprite, Greenvillesprite, P3sprite, Advancedsprite, AirAndMissilesprite,
+                            FCsprite, TSsprite, TMsprite, IWsprite, SAsprite, Sustainsprite, TLsprite, USsprite,
+                            ATCsprite, CSsprite, Commercialsprite, Militarysprite, SMDsprite, SPsprite,
+                            CISsprite, CMsprite, DISsprite, GSsprite]
+
+            var allBuildings = [U2, IFG, C130, C5, F35, SkunkWorks, Greenville, CES,
+                            P3, TS, FC, AirAndMissile, Advanced, TM,
+                            IW, SA, Sustain, TL, US,
+                            GS, DIS, CM, CIS,
+                            Commercial, CS, ATC, Military, SMD, SP,
+                            LMC, LMUK, LMUAE,
+                            CHQ, ATL, WO, EBS, CETO]
+
+            var Aeronautics = [F35, SkunkWorks, C130, CES, IFG, U2, C5, Greenville, P3];
+            Aeronautics.floors = []
+            //var Aeronauticsoutlines = [C130outline, SkunkWorksoutline, CESoutline, F35outline, IFGoutline,
+            //                U2outline, C5outline, Greenvilleoutline, P3outline]
+            var Aeronauticssprites = [C130sprite, SkunkWorkssprite, CESsprite, F35sprite, IFGsprite,
+                            U2sprite, C5sprite, Greenvillesprite, P3sprite]
+
+            var MFC = [Advanced, AirAndMissile,
+                            FC, TS, TM]
+            MFC.floors = []
+            //var MFCoutlines = [Advancedoutline, AirAndMissileoutline, FCoutline, TSoutline, TMoutline]
+            var MFCsprites = [Advancedsprite, AirAndMissilesprite, FCsprite, TSsprite, TMsprite]
+
+            var MST = [IW, SA, Sustain, TL, US]
+            MST.floors = []
+            //var MSToutlines = [IWoutline, SAoutline, Sustainoutline, TLoutline, USoutline]
+            var MSTsprites = [IWsprite, SAsprite, Sustainsprite, TLsprite, USsprite]
+
+            var SS = [ATC, CS, Commercial, Military, SMD, SP]
+            SS.floors = []
+            //var SSoutlines = [ATCoutline, CSoutline, Commercialoutline, Militaryoutline, SMDoutline, SPoutline]
+            var SSsprites = [ATCsprite, CSsprite, Commercialsprite, Militarysprite, SMDsprite, SPsprite]
+
+            var ISGS = [CIS, CM, DIS, GS]
+            ISGS.floors = []
+            //var ISGSoutlines = [CISoutline, CMoutline, DISoutline, GSoutline]
+            var ISGSsprites = [CISsprite, CMsprite, DISsprite, GSsprite]
+
+            var EO = [CHQ, WO, ATL, CETO, EBS]
+            EO.floors = []
+            //var EOoutlines = []
+            var EOsprites = []
+
+            var LMI = [LMUAE, LMC, LMUK]
+            LMI.floors = []
+            //var LMIoutlines = []
+            var LMIsprites = []
+
+            LMResources.floors = []
+
+            var subunits = [Aeronautics, MFC, MST, SS, ISGS, EO, LMI, LMResources]
+            subunits.floors = [Aeronautics.floors, MFC.floors, MST.floors, SS.floors, ISGS.floors, EO.floors, LMI.floors, LMResources.floors]
+            var allOutlines = [U2outline, IFGoutline, C130outline, C5outline, F35outline, SkunkWorksoutline, Greenvilleoutline, CESoutline,
+                            P3outline, TSoutline, FCoutline, AirAndMissileoutline, Advancedoutline, TMoutline,
+                            IWoutline, SAoutline, Sustainoutline, TLoutline, USoutline,
+                            GSoutline, DISoutline, CMoutline, CISoutline,
+                            Commercialoutline, CSoutline, ATCoutline, Militaryoutline, SMDoutline, SPoutline]
+
+
+            //targetList = targetList.concat(allOutlines);
+            //targetList2 = targetList2.concat(allSprites);
+
+            removeAll(allOutlines);
+
+
+
+
+////////////GENERATE SUBCONTRACTORS AND SUPPLIERS
+
+            var Subcontractors = [];
+            var Suppliers = [];
+
+            var allHeights = [small, medium, large, verylarge, small, medium, large, verylarge, large, verylarge]
+
+            function generateSubcontractors(buildingsList) {
+                for (var i=0; i<buildingsList.length; i+=3) {
+                    var theHeight = allHeights[Math.floor(10*Math.random())];
+                    buildingsList[i].subcontractor = new THREE.Mesh(new THREE.BoxGeometry(width, verylarge, width),
+                                                            new THREE.MeshLambertMaterial({color: 0x7A2900}) );
+                    buildingsList[i].subcontractor.position.x = buildingsList[i].position.x  * (rad2 / rad);
+                    buildingsList[i].subcontractor.position.y = verylarge/2;
+                    buildingsList[i].subcontractor.position.z = buildingsList[i].position.z * (rad2 / rad);
+                    buildingsList[i].subcontractor.rotation.y = buildingsList[i].rotation.y;
+                    Subcontractors.push(buildingsList[i].subcontractor);
+                    scene.add(buildingsList[i].subcontractor);
+                }
+            }
+
+            function generateSupplier(buildingsList) {
+                for (var i=1; i<buildingsList.length; i+=3) {
+                    buildingsList[i].supplier = new THREE.Mesh(new THREE.BoxGeometry(width, verylarge, width),
+                                                            new THREE.MeshLambertMaterial({color: 0x8A8A5C}) );
+                    buildingsList[i].supplier.position.x = buildingsList[i].position.x  * (rad3 / (rad + 50));
+                    buildingsList[i].supplier.position.y = verylarge/2;
+                    buildingsList[i].supplier.position.z = buildingsList[i].position.z * (rad3 / (rad+ 50));
+                    buildingsList[i].supplier.rotation.y = buildingsList[i].rotation.y;
+                    Suppliers.push(buildingsList[i].supplier);
+                    scene.add(buildingsList[i].supplier);
+                }
+            }
+
+            generateSubcontractors(allBuildings);
+            generateSupplier(allBuildings);
+
+
+
+////////////FLOOR OUTLINE GENERATOR
+            var FloorGeo = new THREE.BoxGeometry(width, floorheight, width);
+
+            var floorsList = [];
+
+            //GENERATE COLORS TO BE USED FOR FLOORS
+            for (i=0; i<Aeronautics.length; i++) {
+                Aeronautics[i].color = 0x00FFFF}
+            for (i=0; i<MST.length; i++) {
+                MST[i].color = 0xFF9900}
+            for (i=0; i<MFC.length; i++) {
+                MFC[i].color = 0xFF4545}
+            for (i=0; i<SS.length; i++) {
+                SS[i].color = 0x30FF30}
+            for (i=0; i<ISGS.length; i++) {
+                ISGS[i].color = 0xA319A3}
+            for (i=0; i<EO.length; i++) {
+                EO[i].color = 0xB8860B}
+            for (i=0; i<LMI.length; i++) {
+                LMI[i].color = 0x00006F}
+            for (i=0; i<LMResources.length; i++) {
+                LMResources[i].color = 0xDAA520}
+
+
+            function createFloors(building) {
+            //CREATES FLOOR OUTLINES FOR A BUILDING
+                var floorposition = 0;
+                var currentfloors = [];
+                //Find Building Height
+                var box = new THREE.Box3().setFromObject(building);
+                buildingHeight = box.size().y;
+                //Generate Buildings
+                for (i = 0; i<buildingHeight/15; i++) {
+                    building.floor = new THREE.Mesh( FloorGeo, new THREE.MeshBasicMaterial({ color: building.color, side: THREE.BackSide } ) );
+                    building.floor.position.x = building.position.x;
+                    building.floor.position.z = building.position.z;
+                    building.floor.position.y = floorposition + floorheight/2;
+                    building.floor.scale.multiplyScalar(1.07);
+                    building.floor.rotation.y = building.rotation.y
+                    scene.add(building.floor);
+                    floorsList.push(building.floor);
+                    currentfloors.push(building.floor);
+                    floorposition += 15
+                }
+                building.floors = currentfloors
+                targetList = targetList.concat(floorsList);
+                targetList = removeDups(targetList);
+                targetList2 = removeDups(targetList2.concat(floorsList));
+
+                if (findBuilding(building) == Aeronautics) {
+                    Aeronautics.floors.push(building.floors)
+                }
+                if (findBuilding(building) == MST) {
+                    MST.floors.push(building.floors)
+                }
+                if (findBuilding(building) == MFC) {
+                    MFC.floors.push(building.floors)
+                }
+                if (findBuilding(building) == SS) {
+                    SS.floors.push(building.floors)
+                }
+                if (findBuilding(building) == ISGS) {
+                    ISGS.floors.push(building.floors)
+                }
+                if (findBuilding(building) == EO) {
+                    EO.floors.push(building.floors)
+                }
+                if (findBuilding(building) == LMI) {
+                    LMI.floors.push(building.floors)
+                }
+                if (findBuilding(building) == LMResources) {
+                    LMResources.floors.push(building.floors)
+                }
+            }
+
+            function generateFloors(listOfBuildings) {
+                for (var i=0; i<listOfBuildings.length; i++) {
+                    createFloors(listOfBuildings[i])
+                }
+            }
+
+
+            generateFloors(allBuildings);
+            generateFloors(LMResources);
+            floorsList = filter(openFloors(LMResources.floors), floorsList);
+
+            //ASSIGN FLOORS NUMBER (building.floors[i].number)
+            function floorNumbers() {
+                for (i=0; i<subunits.floors.length; i++) {
+                    for (j=0; j<subunits.floors[i].length; j++) {
+                        var floornumber = 1;
+                        for (k=0; k<subunits.floors[i][j].length; k++) {
+                            subunits.floors[i][j][k].number = floornumber;
+                            floornumber += 1;
+                        }
+                    }
+                }
+            }
+
+            floorNumbers();
+
+            function range(lowEnd,highEnd){
+                var arr = [],
+                c = highEnd - lowEnd + 1;
+                while ( c-- ) {
+                    arr[c] = highEnd--
+                }
+                return arr;
+            }
+
+            //ASSIGN FLOORS SAME TEXTBOX POPUP. CHANGE TEXT OF TEXTBOX DEPENDING ON FLOOR CLICKED
+
+            F35.floors[19].callback = function() {
+                    document.getElementById('F35floor20').style.display='block';
+                    document.getElementById('fade').style.display='block';
+            }
+
+
+            function assignCalls() {
+                var a = 0;
+                for (var i=0; i<SkunkWorks.floors.length; i++) {
+                    SkunkWorks.floors[i].callback = function() {
+                        document.getElementById('floorBox').style.display='block';
+                        document.getElementById('fade').style.display='block';
+                        document.getElementById('floortext').innerHTML = "Skunk Works: floor " + range(1, SkunkWorks.floors.length+1)[a];
+                        //mouseActive = false;
+                    }
+                    a += 1;
+                }
+            }
+
+            assignCalls();
+
+            //allOutlines = allOutlines.concat(floorsList);
+            //allOutlines = removeDups(allOutlines);
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+    this.particleGeometry = new THREE.Geometry();
+    for (var i = 0; i < 50; i++)
+        particleGeometry.vertices.push( new THREE.Vector3(0,0,0) );
+
+    var discTexture = THREE.ImageUtils.loadTexture( 'images/fluffy.png' );
+
+    this.attributes =
+    {
+        customColor:     { type: 'c',  value: [] },
+        customOffset:    { type: 'f',  value: [] },
+    };
+
+    var particleCount = particleGeometry.vertices.length
+
+    for( var v = 0; v < particleCount; v++ )
+    {
+        attributes.customColor.value[ v ] = new THREE.Color().setHSL( 1 - v / particleCount, 1.0, 0.5 );
+        attributes.customOffset.value[ v ] = 6.282 * (v / particleCount); // not really used in shaders, move elsewhere
+    }
+
+    this.uniforms =
+    {
+        time:      { type: "f", value: 1.0 },
+        texture:   { type: "t", value: discTexture },
+    };
+
+    var shaderMaterial = new THREE.ShaderMaterial(
+    {
+        uniforms:       uniforms,
+        attributes:     attributes,
+        vertexShader:   document.getElementById( 'vertexshader' ).textContent,
+        fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+        transparent: true, //
+        alphaTest: 0.5,  // if having transparency issues, try including: alphaTest: 0.5,
+        blending: THREE.AdditiveBlending, depthTest: false,
+        // I guess you don't need to do a depth test if you are alpha blending
+        //
+    });
+
+    var particleCube = new THREE.ParticleSystem( particleGeometry, shaderMaterial );
+    particleCube.position.set(0, 1, -(rad + width/2));
+    particleCube.dynamic = true;
+
+    particleCube.sortParticles = true;
+    scene.add( particleCube );
+
+    this.particleGeometry2 = new THREE.Geometry();
+    for (var i = 0; i < 50; i++)
+        particleGeometry2.vertices.push( new THREE.Vector3(0,0,0) );
+
+    for( var v = 0; v < particleCount; v++ )
+    {
+        attributes.customColor.value[ v ] = new THREE.Color().setHSL( 1 - v / particleCount, 1.0, 0.5 );
+        attributes.customOffset.value[ v ] = 6.282 * (v / particleCount); // not really used in shaders, move elsewhere
+    }
+
+    var particleCube2 = new THREE.ParticleSystem( particleGeometry2, shaderMaterial );
+    particleCube2.position.set(0, 100, -(rad + width/2));
+    particleCube2.dynamic = true;
+
+    particleCube2.sortParticles = true;
+    scene.add( particleCube2 );
+
+
+
+
+
+
+    this.particleGeometry3 = new THREE.Geometry();
+    for (var i = 0; i < 50; i++)
+        particleGeometry3.vertices.push( new THREE.Vector3(0,0,0) );
+
+    for( var v = 0; v < particleCount; v++ )
+    {
+        attributes.customColor.value[ v ] = new THREE.Color().setHSL( 1 - v / particleCount, 1.0, 0.5 );
+        attributes.customOffset.value[ v ] = 6.282 * (v / particleCount); // not really used in shaders, move elsewhere
+    }
+
+    var particleCube3 = new THREE.ParticleSystem( particleGeometry3, shaderMaterial );
+    particleCube3.position.set(0, 400, -(rad + width/2));
+    particleCube3.dynamic = true;
+
+    particleCube3.sortParticles = true;
+    scene.add( particleCube3 );
+
+
+
+
+
+this.particleGeometry4 = new THREE.Geometry();
+    for (var i = 0; i < 50; i++)
+        particleGeometry4.vertices.push( new THREE.Vector3(0,0,0) );
+
+    for( var v = 0; v < particleCount; v++ )
+    {
+        attributes.customColor.value[ v ] = new THREE.Color().setHSL( 1 - v / particleCount, 1.0, 0.5 );
+        attributes.customOffset.value[ v ] = 6.282 * (v / particleCount); // not really used in shaders, move elsewhere
+    }
+
+    var particleCube4 = new THREE.ParticleSystem( particleGeometry4, shaderMaterial );
+    particleCube4.position.set(0, 100, -(rad + width/2));
+    particleCube4.dynamic = true;
+
+    particleCube4.sortParticles = true;
+    scene.add( particleCube4 );
+
+
+
+
+
+this.particleGeometry5 = new THREE.Geometry();
+    for (var i = 0; i < 50; i++)
+        particleGeometry5.vertices.push( new THREE.Vector3(0,0,0) );
+
+    for( var v = 0; v < particleCount; v++ )
+    {
+        attributes.customColor.value[ v ] = new THREE.Color().setHSL( 1 - v / particleCount, 1.0, 0.5 );
+        attributes.customOffset.value[ v ] = 6.282 * (v / particleCount); // not really used in shaders, move elsewhere
+    }
+
+    var particleCube5 = new THREE.ParticleSystem( particleGeometry5, shaderMaterial );
+    particleCube5.position.set(0, 450, -(rad + width/2));
+    particleCube5.dynamic = true;
+
+    particleCube5.sortParticles = true;
+    scene.add( particleCube5 );
+
+
+
+
+
+////////////FILTER FUNCTIONS
+            //Determines if obj is in array a
+            function contains(a, obj) {
+                for (var i=0; i < a.length; i++) {
+                    if (a[i] == obj) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function findBuilding(building) {
+            //TAKES building AND RETURNS WHAT SUBUNIT IT IS A PART OF
+                var thesolution = []
+                for (i=0; i<subunits.length; i++) {
+                    if (contains(subunits[i], building)) {
+                        return subunits[i];
+                    }
+                }
+                return thesolution
+            }
+
+
+            function removeDups(origArr) {
+                var newArr = [],
+                    origLen = origArr.length,
+                    found,
+                    x, y;
+
+                for ( x = 0; x < origLen; x++ ) {
+                    found = undefined;
+                    for ( y = 0; y < newArr.length; y++ ) {
+                        if ( origArr[x] === newArr[y] ) {
+                          found = true;
+                          break;
+                        }
+                    }
+                    if ( !found) newArr.push( origArr[x] );
+                }
+                return newArr;
+            }
+
+
+            function filter(smallList, bigList) {
+            //REMOVES ALL ELEMENTS IN smallList FROM bigList//
+                var solution = bigList.slice();
+                for (var i=0; i < smallList.length; i++) {
+                    var index = solution.indexOf(smallList[i]);
+                    if (contains(bigList, smallList[i])) {
+                        solution.splice(index, 1);
+                    }
+                }
+                return solution;
+            }
+
+
+            function removeAll(array){
+            //REMOVES ALL ITEMS IN INPUT ARRAY FROM SCENE//
+                for (var i=0; i<array.length; i++) {
+                    scene.remove(array[i]);
+                }
+            }
+
+            function addAll(array){
+            //ADDS ALL ITEMS IN INPUT ARRAY INTO THE SCENE//
+                for (var i=0; i<array.length; i++) {
+                    scene.add(array[i]);
+                }
+            }
+
+            function removeSubunitFloors(subunitfloors) {
+                for (var i=0; i<subunitfloors.length; i++) {
+                    for (var k=0; k<subunitfloors[i].length; k++) {
+                        scene.remove(subunitfloors[i][k])
+                    }
+                }
+            }
+
+            function addSubunitFloors(subunitfloors) {
+                for (var i=0; i<subunitfloors.length; i++) {
+                    for (var k=0; k<subunitfloors[i].length; k++) {
+                        scene.add(subunitfloors[i][k])
+                    }
+                }
+            }
+
+            function openFloors(list) {
+            //Explodes nested arrays within subunit.floors array
+                var solution = []
+                for (i=0; i<list.length; i++) {
+                    for (k=0; k<list[i].length; k++) {
+                        solution.push(list[i][k])
+                    }
+                }
+                return solution
+            }
+
+            function MFCfilter() {
+                if (MFCactive == true) {
+                    removeSubunitFloors(MFC.floors);
+                    removeAll(MFC);
+                    removeAll(MFCsprites);
+                    MFCactive = false;
+                    //targetList = filter(MFCoutlines, targetList);
+                    targetList1 = filter(MFC, targetList1);
+                    targetList2 = filter(openFloors(MFC.floors), targetList);
+                }
+                else {
+                    addSubunitFloors(MFC.floors);
+                    addAll(MFC);
+                    addAll(MFCsprites);
+                    MFCactive = true;
+                    //targetList = removeDups(targetList.concat(MFCoutlines, targetList));
+                    targetList1 = removeDups(targetList1.concat(MFC, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(MFC.floors), targetList2));
+                }
+            }
+
+            function Aeronauticsfilter() {
+                if (Aeronauticsactive == true) {
+                    removeSubunitFloors(Aeronautics.floors);
+                    removeAll(Aeronautics);
+                    removeAll(Aeronauticssprites);
+                    //targetList = filter(Aeronauticfloors, targetList);
+                    targetList1 = filter(Aeronautics.floors, targetList1);
+                    targetList2 = filter(openFloors(Aeronautics.floors), targetList2)
+                    Aeronauticsactive = false
+                }
+                else {
+                    addSubunitFloors(Aeronautics.floors);
+                    addAll(Aeronautics);
+                    addAll(Aeronauticssprites);
+                    //targetList = removeDups(targetList.concat(Aeronautics.floors, targetList));
+                    targetList1 = removeDups(targetList1.concat(Aeronautics, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(Aeronautics.floors), targetList2));
+                    Aeronauticsactive = true;
+
+                }
+            }
+
+            function MSTfilter() {
+                if (MSTactive == true) {
+                    removeSubunitFloors(MST.floors);
+                    removeAll(MST);
+                    removeAll(MSTsprites);
+                    MSTactive = false
+                    //targetList = filter(MST.floors, targetList);
+                    targetList1 = filter(MST, targetList1);
+                    targetList2 = filter(openFloors(MST.floors), targetList2);
+                }
+                else {
+                    addSubunitFloors(MST.floors);
+                    addAll(MST);
+                    addAll(MSTsprites);
+                    MSTactive = true;
+                    //targetList = removeDups(targetList.concat(MSToutlines, targetList));
+                    targetList1 = removeDups(targetList1.concat(MST, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(MST.floors), targetList2));
+                }
+            }
+
+            function SSfilter() {
+                if (SSactive == true) {
+                    removeSubunitFloors(SS.floors);
+                    removeAll(SS);
+                    removeAll(SSsprites);
+                    SSactive = false
+                    //targetList = filter(SS.floors, targetList);
+                    targetList1 = filter(SS, targetList1);
+                    targetList2 = filter(openFloors(SS.floors), targetList2);
+                }
+                else {
+                    addSubunitFloors(SS.floors);
+                    addAll(SS);
+                    addAll(SSsprites);
+                    SSactive = true;
+                    //targetList = removeDups(targetList.concat(SS.floors, targetList));
+                    targetList1 = removeDups(targetList1.concat(SS, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(SS.floors), targetList2));
+                }
+            }
+
+            function ISGSfilter() {
+                if (ISGSactive == true) {
+                    removeSubunitFloors(ISGS.floors);
+                    removeAll(ISGS);
+                    removeAll(ISGSsprites);
+                    ISGSactive = false
+                    //targetList = filter(ISGS.floors, targetList);
+                    targetList1 = filter(ISGS, targetList1);
+                    targetList2 = filter(openFloors(ISGS.floors), targetList2);
+                }
+                else {
+                    addSubunitFloors(ISGS.floors);
+                    addAll(ISGS);
+                    addAll(ISGSsprites);
+                    ISGSactive = true;
+                    //targetList = removeDups(targetList.concat(ISGS.floors, targetList));
+                    targetList1 = removeDups(targetList1.concat(ISGS, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(ISGS.floors), targetList2));
+                }
+            }
+
+            function LMIfilter() {
+                if (LMIactive == true) {
+                    removeSubunitFloors(LMI.floors);
+                    removeAll(LMI);
+                    removeAll(LMIsprites);
+                    LMIactive = false
+                    //targetList = filter(LMI.floors, targetList);
+                    targetList1 = filter(LMI, targetList1);
+                    targetList2 = filter(openFloors(LMI.floors), targetList2);
+                }
+                else {
+                    addSubunitFloors(LMI.floors);
+                    addAll(LMI);
+                    addAll(LMIsprites);
+                    LMIactive = true;
+                    //targetList = removeDups(targetList.concat(LMI.floors, targetList));
+                    targetList1 = removeDups(targetList1.concat(LMI, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(LMI.floors), targetList2));
+                }
+            }
+
+            function EOfilter() {
+                if (EOactive == true) {
+                    removeSubunitFloors(EO.floors);
+                    removeAll(EO);
+                    removeAll(EOsprites);
+                    EOactive = false
+                    //targetList = filter(EO.floors, targetList);
+                    targetList1 = filter(EO, targetList1);
+                    targetList2 = filter(openFloors(EO.floors), targetList2);
+                }
+                else {
+                    addSubunitFloors(EO.floors);
+                    addAll(EO);
+                    addAll(EOsprites);
+                    EOactive = true;
+                    //targetList = removeDups(targetList.concat(EO.floors, targetList));
+                    targetList1 = removeDups(targetList1.concat(EO, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(EO.floors), targetList2));
+                }
+            }
+
+
+
+            function restoreSubunits(){
+                if (MFCactive == true && Aeronauticsactive == true && MSTactive == true
+                && SSactive == true && ISGSactive == true && LMIactive == true && SSactive == true) {
+                    removeAll(floorsList);
+                    removeAll(allBuildings);
+                    removeAll(allSprites);
+                    MFCactive = false;
+                    Aeronauticsactive = false;
+                    MSTactive = false;
+                    SSactive = false;
+                    ISGSactive = false;
+                    LMIactive = false;
+                    EOactive = false;
+                    //targetList = filter(allOutlines, targetList);
+                    targetList1 = filter(allBuildings, targetList1);
+                    targetList2 = filter(floorsList, targetList2);
+                }
+                else {
+                    addAll(floorsList);
+                    addAll(allBuildings);
+                    addAll(allSprites);
+                    MFCactive = true;
+                    MSTactive = true;
+                    Aeronauticsactive = true;
+                    SSactive = true;
+                    ISGSactive = true;
+                    LMIactive = true;
+                    EOactive = true;
+                    //targetList = removeDups(targetList.concat(allOutlines));
+                    targetList1 = removeDups(targetList1.concat(allBuildings));
+                    targetList2 = removeDups(targetList2.concat(floorsList));
+                }
+            }
+
+            function LMResourcesfilter() {
+                if (LMResourcesactive) {
+                    removeSubunitFloors(LMResources.floors);
+                    removeAll(LMResources);
+                    removeAll(LMRMisc);
+                    LMResourcesactive = false
+                    targetList1 = filter(LMResources, targetList1);
+                    targetList2 = filter(openFloors(LMResources.floors), targetList2);
+                }
+                else {
+                    addSubunitFloors(LMResources.floors);
+                    addAll(LMResources);
+                    addAll(LMRMisc);
+                    LMResourcesactive = true;
+                    targetList1 = removeDups(targetList1.concat(LMResources, targetList1));
+                    targetList2 = removeDups(targetList2.concat(openFloors(LMResources.floors), targetList2));
+                }
+            }
+
+            function Subcontractorfilter() {
+                if (Subcontractoractive) {
+                    removeAll(Subcontractors);
+                    Subcontractoractive = false;
+                }
+                else {
+                    addAll(Subcontractors);
+                    Subcontractoractive = true;
+                }
+            }
+
+            function Supplierfilter() {
+                if (Supplieractive) {
+                    removeAll(Suppliers);
+                    Supplieractive = false;
+                }
+                else {
+                    addAll(Suppliers);
+                    Supplieractive = true;
+                }
+            }
+
+
+            function onDocumentMouseMove( event )
+            {
+                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+            }
+
+
+            function onDocumentMouseDown( event )
+            {
+                //var theTargetList1
+                //theTargetList1 = targetList1
+                // the following line would stop any other event handler from firing
+                // (such as the mouses TrackballControls)
+                event.preventDefault();
+
+                console.log("Click.");
+
+                // update the mouse variable
+                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+                // find intersections
+
+                // create a Ray with origin at the mouse position
+                //   and direction into the scene (camera direction)
+                var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+                vector.unproject(camera );
+                var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+                // create an array containing all objects in the scene with which the ray intersects
+                var intersects = ray.intersectObjects( targetList2 );
+
+
+                // if there is one (or more) intersections
+                if ( intersects.length > 0 )
+                {
+                    console.log("Hit @ " + toString( intersects[0].point ) );
+                    intersects[0].object.callback();
+
+                }
+
+            }
+
+
+
+            function toString(v) { return "[ " + v.x + ", " + v.y + ", " + v.z + " ]"; }
+
+
+
+
+            function position(t, x, y, z)
+{
+    // x(t) = cos(2t)·(3+cos(3t))
+    // y(t) = sin(2t)·(3+cos(3t))
+    // z(t) = sin(3t)
+    // return new THREE.Vector3(
+    //      20.0 * Math.cos(2.0 * t) * (3.0 + Math.cos(3.0 * t)),
+    //      20.0 * Math.sin(2.0 * t) * (3.0 + Math.cos(3.0 * t)),
+    //      50.0 * Math.sin(3.0 * t) );
+    // if((y*t)%y == 0){
+    // console.log(y*t)%y
+    // }
+    // console.log((((t)%(x))*((t)%(x)))/x);
+    return new THREE.Vector3((((x*t)%x)*((x*t)%x))/x,(y*t)%y,(z*t)%z);
+}
+
+
+
+            function update()
+            {
+
+                controls.update();
+                // particleCube.rotation.y += 0.01;
+
+                // find intersections
+                var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+                vector.unproject(camera );
+                var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+                // create an array containing all objects in the scene with which the ray intersects
+                var intersects = ray.intersectObjects( targetList2 );
+
+                // INTERSECTED = the object in the scene currently closest to the camera
+                //        and intersected by the Ray projected from the mouse position
+
+
+                // if there is one (or more) intersections
+                if ( intersects.length > 0 )
+                {
+                    // if the closest object intersected is not the currently stored intersection object
+                    if ( intersects[ 0 ].object != INTERSECTED )
+                    {
+                        // restore previous intersection object (if it exists) to its original color
+                        if ( INTERSECTED )
+                            INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+                        //    if (INTERSECTED != null) {
+                        //        INTERSECTED.scale.multiplyScalar(1/1.05);}
+                        // store reference to closest object as current intersection object
+                        INTERSECTED = intersects[ 0 ].object;
+                        // store color of closest object (for later restoration)
+                        INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+
+                        // set a new color for closest object
+                        INTERSECTED.material.color.setHex( 0xffffff );
+                        //INTERSECTED.scale.multiplyScalar(1.05);
+
+
+                    }
+                }
+                else // there are no intersections
+                {
+                    // restore previous intersection object (if it exists) to its original color
+                    if ( INTERSECTED )
+                        INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+                    //    INTERSECTED.scale.multiplyScalar(1/1.05)
+                    // remove previous intersection object reference
+                    //     by setting current intersection object to "nothing"
+                    INTERSECTED = null;
+                }
+
+                var t0 = clock.getElapsedTime();
+
+                uniforms.time.value = 0.125* t0;
+
+                for( var v = 0; v < particleGeometry.vertices.length; v++ )
+                {
+                    var timeOffset = uniforms.time.value + 100*attributes.customOffset.value[ v ]+10;
+                    particleGeometry.vertices[v] = position(timeOffset, 630,0,380);
+                    // console.log(t0)
+                }
+
+                particleCube.__dirtyVertices = true;
+                particleCube.geometry.verticesNeedUpdate = true;
+
+                for( var v = 0; v < particleGeometry.vertices.length; v++ )
+                {
+                    var timeOffset = uniforms.time.value + 100*attributes.customOffset.value[ v ]+10;
+                    particleGeometry2.vertices[v] = position(timeOffset, -630,-100,380);
+                    // console.log(t0)
+                }
+
+                particleCube2.__dirtyVertices = true;
+                particleCube2.geometry.verticesNeedUpdate = true;
+
+
+
+                for( var v = 0; v < particleGeometry.vertices.length; v++ )
+                {
+                    var timeOffset = uniforms.time.value + 100*attributes.customOffset.value[ v ]+10;
+                    particleGeometry3.vertices[v] = position(timeOffset, -650,-300,1080);
+                    // console.log(t0)
+                }
+
+                particleCube3.__dirtyVertices = true;
+                particleCube3.geometry.verticesNeedUpdate = true;
+
+
+
+
+                for( var v = 0; v < particleGeometry.vertices.length; v++ )
+                {
+                    var timeOffset = uniforms.time.value + 100*attributes.customOffset.value[ v ]+10;
+                    particleGeometry4.vertices[v] = position(timeOffset, -690,-100,980);
+                    // console.log(t0)
+                }
+
+                particleCube4.__dirtyVertices = true;
+                particleCube4.geometry.verticesNeedUpdate = true;
+
+
+
+
+
+                for( var v = 0; v < particleGeometry.vertices.length; v++ )
+                {
+                    var timeOffset = uniforms.time.value + 100*attributes.customOffset.value[ v ]+10;
+                    particleGeometry5.vertices[v] = position(timeOffset, 730,-450,780);
+                    // console.log(t0)
+                }
+
+                particleCube5.__dirtyVertices = true;
+                particleCube5.geometry.verticesNeedUpdate = true;
+
+
+
+
+
+
+
+
+                if (mouseActive == false) {
+                    document.removeEventListener('mousedown', onDocumentMouseDown);}
+                if (mouse.y > 0.77) {
+                    document.removeEventListener('mousedown', onDocumentMouseDown);}
+                else {
+                    document.addEventListener('mousedown', onDocumentMouseDown, false)}
+
+
+            };
+
+            function animate()
+            {
+                requestAnimationFrame( animate );
+                update();
+                render();
+
+            }
+
+            function render()
+            {
+
+                renderer.render(scene, camera)
+
+
+            };
+
+
+
+            animate();
+
+
+
+
+        </script>
+    </body>
+</html>

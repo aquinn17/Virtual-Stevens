@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>LMCOville</title>
+		<style>
+			.black_overlay{
+				display: none;
+				position: absolute;
+				top: 0%;
+				left: 0%;
+				width: 100%;
+				height: 100%;
+				background-color: black;
+				z-index:1001;
+				-moz-opacity: 0.8;
+				opacity:.80;
+				filter: alpha(opacity=80);
+			}
+			.white_content {
+				display: none;
+				position: absolute;
+				top: 25%;
+				left: 25%;
+				width: 50%;
+				height: 50%;
+				padding: 16px;
+				border: 16px solid orange;
+				background-color: white;
+				z-index:1002;
+				overflow-y: auto;
+
+			img.opacity {
+				opacity: 0.8;
+				filter: alpha(opacity=80);
+				}
+
+			img.opacity:hover {
+				opacity: 1;
+				filter: alpha(opacity=100);
+				}
+
+
+
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+
+		<style type="text/css">
+			#tfheader{
+				background-color:#c3dfef;
+			}
+			#tfnewsearch{
+				float:right;
+				padding:20px;
+			}
+			.tftextinput{
+				margin: 0;
+				padding: 5px 15px;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size:14px;
+				border:1px solid #0076a3; border-right:0px;
+				border-top-left-radius: 5px 5px;
+				border-bottom-left-radius: 5px 5px;
+			}
+			.tfbutton {
+				margin: 0;
+				padding: 5px 15px;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size:14px;
+				outline: none;
+				cursor: pointer;
+				text-align: center;
+				text-decoration: none;
+				color: #ffffff;
+				border: solid 1px #0076a3; border-right:0px;
+				background: #0095cd;
+				background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+				background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+				border-top-right-radius: 5px 5px;
+				border-bottom-right-radius: 5px 5px;
+			}
+			.tfbutton:hover {
+				text-decoration: none;
+				background: #007ead;
+				background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+				background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+			}
+			/* Fixes submit button height problem in Firefox */
+			.tfbutton::-moz-focus-inner {
+			  border: 0;
+			}
+			.tfclear{
+				clear:both;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="searchbar">
+			<div style="position: absolute; right: 10px; top: 20px; width: 400px; height: 30px">
+				<form action="http://127.0.0.1:5000" id="tfnewsearch" method="POST" target="_blank">
+						<input type="text" class="tftextinput" name="k" size="30" maxlength="120">
+						<input type="submit" name = "my-search" value="Submit" class="tfbutton">
+				</form>
+				<div class="tfclear"></div>
+			</div>
+		</div>
+
+		<div id="filters">
+			<div id="heptagon">
+				<div style="position: absolute; left: 60px; top: 40px;width: 150px; height: 150px">
+					<img src="heptagon.png" alt="Heptagon" style="width: 150px; height: 150px">
+				</div>
+			</div>
+			<div id="MFCfilter">
+				<div style="position: absolute; left: 25px; top: 70px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(MFC);"> MFC </button>
+				</div>
+			</div>
+			<div id="Aeronauticsfilter">
+				<div style="position: absolute; left: 95px; top: 20px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(Aeronautics)();"> Aeronautics </button>
+				</div>
+			</div>
+			<div id="MSTfilter">
+				<div style="position: absolute; left: 200px; top: 70px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(MST)();"> MST </button>
+				</div>
+			</div>
+			<div id="SSfilter">
+				<div style="position: absolute; left: 220px; top: 110px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(SS);"> Space Systems </button>
+				</div>
+			</div>
+			<div id="ISGSfilter">
+				<div style="position: absolute; left: 25; top: 120px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(ISGS);"> IS&GS </button>
+				</div>
+			</div>
+			<div id="LMIfilter">
+				<div style="position: absolute; left: 50; top: 170px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(LMI);"> LM International</button>
+				</div>
+			</div>
+			<div id="EOfilter">
+				<div style="position: absolute; left: 180px; top: 170px; width: 10px; height: 10px">
+					<button id="restore" onClick="subunitFilter(EO);"> Enterprise Operations</button>
+				</div>
+			</div>
+			<div id="LMResourcesfilter">
+				<div style="position: absolute; left: 95px; top: 100px; width: 10px; height: 10px">
+					<button id="restore" onClick="LMResourcesfilter();"> Resources </button>
+				</div>
+			<div id="restoresubunitsfilter">
+				<div style="position: absolute; left: 95px; top: 140px; width: 10px; height: 10px">
+					<button id="restore" onClick="restoreSubunits();"> LMCOville </button>
+				</div>
+			</div>
+			<div id="Partnersfilter">
+				<div style="position: absolute; left: 240px; top: 45px; width: 10px; height: 10px">
+					<button id="restore" onClick="outsideFilter(Partners);"> Partners </button>
+				</div>
+			</div>
+	
+			<div id="Suppliersfilter">
+				<div style="position: absolute; left: 310px; top: 32px; width: 10px; height: 10px">
+					<button id="restore" onClick="outsideFilter(Suppliers);"> Suppliers </button>
+				</div>
+			</div>
+			<div id="Customersfilter">
+				<div style="position: absolute; left: 385px; top: 19px; width: 10px; height: 10px">
+					<button id="restore" onClick="outsideFilter(Customers);"> Customers </button>
+				</div>
+			</div>
+		</div>
+
+		<div id="videos" class="white_content">
+			<h3>Lockheed Martin's Current Videos</h3>
+			<iframe width="420" height="345" src="https://www.youtube.com/embed/YmgZOe67RnM"></iframe>
+			<iframe width="420" height="345" src="https://www.youtube.com/embed/UlYClniDFkM"></iframe>
+			<iframe width="420" height="345" src="https://www.youtube.com/embed/a6L5J7WcUpo"></iframe>
+			<img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px" class="opacity"
+			onclick="document.getElementById('videos').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+		</div>
+
+
+		<div id="fade" class="black_overlay"></div>
+
+		<div id="F35floors">
+			<div id="F35floor20" class="white_content">Rooms on this floor!
+				<p><a target = "_blank" href="file:///C:\three.js\LMCOville\Floors\F35\F35floor20room1.html">Room 1</a>
+				<p><a target = "_blank" href="file:///C:\three.js\LMCOville\Floors\F35\F35floor20room2.html"> Room 2 </a></p>
+				<p><a target = "_blank" href="file:///C:\three.js\LMCOville\Floors\F35\F35floor20room3.html"> Room 3 </a></p>
+				<p><a target = "_blank" href="file:///C:\three.js\LMCOville\Floors\F35\F35floor20room4.html"> Room 4 </a></p>
+				<p><a target = "_blank" href="file:///C:\three.js\LMCOville\Floors\F35\F35floor20room5.html"> Room 5 </a></p>
+				<img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px" class="opacity"
+				onclick="document.getElementById('F35floor20').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+			</div>
+
+		</div>
+	</div>
+
+		<div id="TextBoxes">
+			<div id="F35Box" class="white_content">Meet the F35 Group!
+				<p> Click <a target = "_blank"href="http://lockheedmartin.com/us/products/f35.html"> here</a>  to learn more </p>
+				<img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px" class="opacity"
+				onclick="document.getElementById('F35Box').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+			</div>
+
+			<div id="SkunkWorksBox" class="white_content">Meet the innovative and brilliant Skunk Works Team!
+				<p> Click <a target = "_blank"href="http://www.lockheedmartin.com/us/aeronautics/skunkworks.html"> here</a>  to learn more </p>
+				<img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px"
+				onclick="document.getElementById('SkunkWorksBox').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+			</div>
+
+			<div id="C5Box" class="white_content">Those behind the C-5 Galaxy Military Transport Aircraft!
+				<p id="C5Text"> Click <a target = "_blank"href="http://www.lockheedmartin.com/us/products/c5.html"> here</a>  to learn more </p>
+				<img src="close.png" alt="close window" style="position: absolute; top: 1%; right: 1%; width: 30px; height: 30px"
+				onclick="document.getElementById('C5Box').style.display='none';document.getElementById('fade').style.display='none'; mouseActive = true">
+			</div>
+		</div>
+
+
+		<script src="three.min.js"></script>
+		<script src="OrbitControls.js"></script>
+		<script src="TrackballControls.js"></script>
+		<script src="gentilis_bold.typeface.js"></script>
+		<script src="gentilis_regular.typeface.js"></script>
+		<script src="optimer_bold.typeface.js"></script>
+		<script src="optimer_regular.typeface.js"></script>
+		<script src="helvetiker_regular.typeface.js"></script>
+		<script src="helvetiker_bold.typeface.js"></script>
+		<script src="Detector.js"></script>
+		<script src="THREEx.FullScreen.js"></script>
+		<script src="threex.keyboardstate.js"></script>
+		<script src="threex.domevents.js"></script>
+		<script src="THREEx.WindowResize.js"></script>
+
+
+		<script>
+			var keyboard = new THREEx.KeyboardState();
+
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 50000);
+
+			var mouseActive = true;
+
+		// RENDERER
+			var renderer
+			if ( Detector.webgl )
+				renderer = new THREE.WebGLRenderer( {antialias:true} );
+			else
+				renderer = new THREE.CanvasRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			//global variables
+			var rad = 700
+			var rad2 = 1200
+			var rad3 = 1700
+			var rad4 = 2200
+			var rad5 = 2500
+			var small = 120
+			var medium = 180
+			var large = 225
+			var verylarge = 300
+			var width = 85
+			var floorheight = 14
+
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2();
+
+			var floorsList = [];
+			var targetList = [];
+			var targetList2 = [];
+			var projector, mouse = { x:0, y:0 }
+			var INTERSECTED
+
+
+			THREEx.WindowResize(renderer, camera);
+			THREEx.FullScreen.bindKey({ charCode: '`'.charCodeAt(0) });
+
+
+
+
+				renderer.autoClear = false
+
+				scene.add(camera);
+				var controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.rotateSpeed = 0.6;
+				controls.zoomSpeed = 1.5;
+				controls.panSpeed = 0.8;
+				controls.noZoom = false;
+				controls.noPan = true;
+				controls.staticMoving = true;
+				controls.dynamicDampingFactor = 0.3;
+				controls.minDistance = -600;
+				controls.maxDistance = 3000;
+				//controls.minPolarAngle = 0.8*Math.PI/3
+				controls.maxPolarAngle = 1.55*Math.PI/3
+				camera.position.set(0, 1100, 1500);
+				camera.lookAt(new THREE.Vector3(0, 200, 0));
+
+
+////////////////FIXED ORBIT CONTROLS FOCUS POINT
+				controls.target.copy( new THREE.Vector3(0, 200, 0) );
+
+
+				//GRASS
+				var grassGeo = new THREE.PlaneGeometry(50000, 50000, 10, 10);
+				var grassMat = new THREE.MeshLambertMaterial({color:0x19A319, side: THREE.DoubleSide});
+				var grass = new THREE.Mesh(grassGeo, grassMat);
+				grass.position.y = -10
+				grass.rotation.x = Math.PI / 2;
+				scene.add(grass);
+
+				//SKYBOX
+				var skyBoxGeo = new THREE.BoxGeometry(50000, 50000, 50000);
+				var skyBoxMat = new THREE.MeshBasicMaterial({color: 0x00CCFF, side: THREE.BackSide});
+				var skyBox = new THREE.Mesh(skyBoxGeo, skyBoxMat);
+				scene.add(skyBox);
+
+				//LIGHTS
+				var light = new THREE.PointLight(0xffffff);
+				light.position.set(30,300,40);
+				scene.add(light);
+				var ambientlight = new THREE.AmbientLight( 0xA1A1A1 ); // soft white light
+				scene.add( ambientlight );
+
+				//BUILDING TEXTURE
+				var texture       = new THREE.Texture( generateTexture() );
+				texture.anisotropy = renderer.getMaxAnisotropy();
+				texture.needsUpdate    = true;
+
+				//BUILDING MATERIAL
+				var buildingMaterial  = new THREE.MeshFaceMaterial([
+					new THREE.MeshLambertMaterial({map : texture,}),
+					new THREE.MeshLambertMaterial({map : texture,}),
+					new THREE.MeshLambertMaterial({color: Math.random() * 0x000000}),
+					new THREE.MeshBasicMaterial({color: 0xffffff}),
+					new THREE.MeshLambertMaterial({map : texture,}),
+					new THREE.MeshLambertMaterial({map : texture,})
+					]);
+
+
+
+				function generateTexture() {
+				// build a small canvas 32x64 and paint it in white
+					var canvas  = document.createElement( 'canvas' );
+					canvas.width = 32;
+					canvas.height    = 64;
+					var context = canvas.getContext( '2d' );
+					// plain it in white
+					context.fillStyle    = '#ffffff';
+					context.fillRect( 0, 0, 32, 64 );
+					// draw the window rows - with a small noise to simulate light variations in each room
+					for( var y = 2; y < 64; y += 2 ){
+						for( var x = 0; x < 32; x += 2 ){
+							var value   = Math.floor( Math.random() * 64 );
+							context.fillStyle = 'rgb(' + [value, value, value].join( ',' )  + ')';
+							context.fillRect( x, y, 2, 1 );
+						}
+					}
+					// build a bigger canvas and copy the small one in it
+					// This is a trick to upscale the texture without filtering
+					var canvas2 = document.createElement( 'canvas' );
+					canvas2.width    = 512;
+					canvas2.height   = 1024;
+					var context = canvas2.getContext( '2d' );
+					// disable smoothing
+					context.imageSmoothingEnabled        = false;
+					context.imageSmoothingEnabled  = false;
+					context.mozImageSmoothingEnabled = false;
+					// then draw the image
+					context.drawImage( canvas, 0, 0, canvas2.width, canvas2.height );
+					// return the just built canvas2
+					return canvas2;
+				}
+
+
+				//CENTER PLATFORMS
+				var cylindergeo = new THREE.CylinderGeometry(rad, rad, 1, 50, 50);
+				var cylindermat = new THREE.MeshLambertMaterial({color:0x4D4D4D});
+				var cylinder = new THREE.Mesh(cylindergeo, cylindermat);
+				scene.add(cylinder);
+
+				var ringgeo = new THREE.RingGeometry(rad, rad2,100);
+				var ringmat = new THREE.MeshLambertMaterial({color:0x6F6F6F});
+				var ring = new THREE.Mesh(ringgeo, ringmat);
+				ring.rotation.x = 3*Math.PI/2
+				scene.add(ring);
+
+				var ringgeo2 = new THREE.RingGeometry(rad2, rad3, 100);
+				var ringmat2 = new THREE.MeshLambertMaterial({color:0x8F8F8F})
+				var ring2 = new THREE.Mesh(ringgeo2, ringmat2);
+				ring2.rotation.x = 3*Math.PI/2
+				scene.add(ring2);
+
+				var ringgeo3 = new THREE.RingGeometry(rad3, rad4, 100);
+				var ringmat3 = new THREE.MeshLambertMaterial({color:0xADADAD})
+				var ring3 = new THREE.Mesh(ringgeo3, ringmat3);
+				ring3.rotation.x = 3*Math.PI/2;
+				scene.add(ring3);
+
+				var ringgeo4 = new THREE.RingGeometry(rad4, rad5, 100);
+				var ringmat4 = new THREE.MeshLambertMaterial({color:0xCACACA})
+				var ring4 = new THREE.Mesh(ringgeo4, ringmat4);
+				ring4.rotation.x = 3*Math.PI/2;
+				scene.add(ring4);
+
+
+	////////////UNIT TITLES
+				//AERONAUTICS TEXT
+				var AeronauticsText = "Aeronautics";
+				var hash = document.location.hash.substr( 1 );
+
+				var materialFront = new THREE.MeshBasicMaterial({color: 0xffff00});
+				var materialSide = new THREE.MeshBasicMaterial({color: 0x000088});
+				var materialArray = [materialFront, materialSide];
+
+
+				if (hash.length !== 0 ) {
+					AeronauticsText = hash
+				}
+
+				var text3d = new THREE.TextGeometry( AeronauticsText, {
+					size:30, height: 5, curveSegments:3,
+					font: "helvetiker", weight: "bold", style: "normal",
+					bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+					material: 0, extrudeMaterial: 1
+				});
+				text3d.computeBoundingBox();
+
+				var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+				var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+				wordtext = new THREE.Mesh(text3d, textMaterial);
+				wordtext.position.set(centerOffset, 15, -rad + 50);
+				wordtext.rotation.y = Math.PI*2
+				//wordtext.rotation.x = -Math.PI/8
+				var group = new THREE.Group()
+				group.add( wordtext );
+				scene.add(group);
+
+				//MISSILES AND FIRE CONTROL TEXT
+				var MFCText = "Missiles and Fire Control";
+
+				var materialFront = new THREE.MeshBasicMaterial({color: 0xFFAAAF});
+				var materialSide = new THREE.MeshBasicMaterial({color: 0xF00000});
+				var materialArray = [materialFront, materialSide];
+
+
+				if (hash.length !== 0 ) {
+					MFCText = hash
+				}
+
+				var text3d = new THREE.TextGeometry( MFCText, {
+					size:25, height: 5, curveSegments:3,
+					font: "helvetiker", weight: "bold", style: "normal",
+					bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+					material: 0, extrudeMaterial: 1
+				});
+				text3d.computeBoundingBox();
+
+				var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+				var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+				wordtext = new THREE.Mesh(text3d, textMaterial);
+				wordtext.position.set(centerOffset-(rad*.65), 15, -rad*.23);
+				wordtext.rotation.y = 2.1*Math.PI/7
+				var group = new THREE.Group()
+				group.add( wordtext );
+				scene.add(group);
+
+				//MISSION AND SYSTEMS TRAINING TEXT
+				var MSTText = "Mission and Systems Training";
+
+				var materialFront = new THREE.MeshBasicMaterial({color: 0xFFC800});
+				var materialSide = new THREE.MeshBasicMaterial({color: 0xFF6400});
+				var materialArray = [materialFront, materialSide];
+
+
+				if (hash.length !== 0 ) {
+					MSTText = hash
+				}
+
+				var text3d = new THREE.TextGeometry( MSTText, {
+					size:22, height: 5, curveSegments:3,
+					font: "helvetiker", weight: "bold", style: "normal",
+					bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+					material: 0, extrudeMaterial: 1
+				});
+				text3d.computeBoundingBox();
+
+				var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+				var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+				wordtext = new THREE.Mesh(text3d, textMaterial);
+				wordtext.position.set(-centerOffset+(rad*.29), 15, -rad*.75);
+				//centerOffset-(rad*.65), 15, -rad*.15 + 10
+				wordtext.rotation.y = -2.1*Math.PI/7
+				var group = new THREE.Group()
+				group.add( wordtext );
+				scene.add(group);
+
+				//SPACE SYSTEMS TEXT
+				var SSText = "Space Systems";
+
+				var materialFront = new THREE.MeshBasicMaterial({color: 0x64FF64});
+				var materialSide = new THREE.MeshBasicMaterial({color: 0x00A600});
+				var materialArray = [materialFront, materialSide];
+
+
+				if (hash.length !== 0 ) {
+					MSTText = hash
+				}
+
+				var text3d = new THREE.TextGeometry( SSText, {
+					size:30, height: 5, curveSegments:3,
+					font: "helvetiker", weight: "bold", style: "normal",
+					bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+					material: 0, extrudeMaterial: 1
+				});
+				text3d.computeBoundingBox();
+
+				var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+				var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+				wordtext = new THREE.Mesh(text3d, textMaterial);
+				wordtext.position.set(-centerOffset+(rad*.75), 15, rad*.02);
+				wordtext.rotation.y = -3.9*Math.PI/7
+				var group = new THREE.Group()
+				group.add( wordtext );
+				scene.add(group);
+
+
+				//INFORMATION AND GLOBAL SOLUTIONS TEXT
+				var ISGSText = "Information Systems and Global Solutions";
+
+				var materialFront = new THREE.MeshBasicMaterial({color: 0xB45AB4});
+				var materialSide = new THREE.MeshBasicMaterial({color: 0x780078});
+				var materialArray = [materialFront, materialSide];
+
+
+				if (hash.length !== 0 ) {
+					ISGSText = hash
+				}
+
+				var text3d = new THREE.TextGeometry( ISGSText, {
+					size:18, height: 5, curveSegments:3,
+					font: "helvetiker", weight: "bold", style: "normal",
+					bevelThickness: 1, bevelSize: 2, bevelEnabled: true,
+					material: 0, extrudeMaterial: 1
+				});
+				text3d.computeBoundingBox();
+
+				var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+				var textMaterial = new THREE.MeshFaceMaterial(materialArray);
+
+				wordtext = new THREE.Mesh(text3d, textMaterial);
+				wordtext.position.set(centerOffset-(rad*.50), 15, rad*.57);
+				wordtext.rotation.y = 3.9*Math.PI/7
+				var group = new THREE.Group()
+				group.add( wordtext );
+				scene.add(group);
+
+
+	//////////SPRITE SUB UNIT TITLES
+			function makeTextSprite( message, parameters )
+			{
+				if ( parameters === undefined ) parameters = {};
+
+				var fontface = parameters.hasOwnProperty("fontface") ?
+					parameters["fontface"] : "Arial";
+
+				var fontsize = parameters.hasOwnProperty("fontsize") ?
+					parameters["fontsize"] : 18;
+
+				var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+					parameters["borderThickness"] : 4;
+
+				var borderColor = parameters.hasOwnProperty("borderColor") ?
+					parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+
+				var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+					parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+
+				var canvas = document.createElement('canvas');
+				var context = canvas.getContext('2d');
+				context.font = "Bold " + fontsize + "px " + fontface;
+
+				// get size data (height depends only on font size)
+				var metrics = context.measureText( message );
+				var textWidth = metrics.width;
+
+				// background color
+				context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
+											  + backgroundColor.b + "," + backgroundColor.a + ")";
+				// border color
+				context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+											  + borderColor.b + "," + borderColor.a + ")";
+
+				context.lineWidth = borderThickness;
+				roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+				// 1.4 is extra height factor for text below baseline: g,j,p,q.
+
+				// text color
+				context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+				context.fillText( message, borderThickness, fontsize + borderThickness);
+
+				// canvas contents will be used for a texture
+				var texture = new THREE.Texture(canvas)
+				texture.needsUpdate = true;
+
+				var spriteMaterial = new THREE.SpriteMaterial(
+					{ map: texture, useScreenCoordinates: false});// alignment: spriteAlignment } );
+				var sprite = new THREE.Sprite( spriteMaterial );
+				sprite.scale.set(100,50,1.0);
+				return sprite;
+			}
+
+			// function for drawing rounded rectangles
+			function roundRect(ctx, x, y, w, h, r)
+			{
+				ctx.beginPath();
+				ctx.moveTo(x+r, y);
+				ctx.lineTo(x+w-r, y);
+				ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+				ctx.lineTo(x+w, y+h-r);
+				ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+				ctx.lineTo(x+r, y+h);
+				ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+				ctx.lineTo(x, y+r);
+				ctx.quadraticCurveTo(x, y, x+r, y);
+				ctx.closePath();
+				ctx.fill();
+				ctx.stroke();
+			}
+
+	//////////////AERONAUTICS//
+
+				//F35
+				var F35Geo = new THREE.BoxGeometry(width, verylarge, width);
+				var F35 = new THREE.Mesh(F35Geo, buildingMaterial);
+				F35.position.set(0, verylarge/2, -(rad + width/2));
+				scene.add(F35);
+
+				F35.sprite = makeTextSprite( " F-35 ",
+					{ fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				F35.sprite.position.set(20, verylarge + 20, -rad);
+				scene.add( F35.sprite );
+
+
+				//Skunk Works
+				var SkunkWorksGeo = new THREE.BoxGeometry(width, medium, width);
+				var SkunkWorks = new THREE.Mesh(SkunkWorksGeo, buildingMaterial);
+				SkunkWorks.position.set(width+10, medium/2, -(rad + width/2));
+				scene.add(SkunkWorks);
+
+				SkunkWorks.sprite = makeTextSprite( " Skunk Works ",
+					{ fontsize: 40, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				SkunkWorks.sprite.position.set(width + 15, medium + 10, -rad);
+				scene.add( SkunkWorks.sprite );
+
+
+				//C-5
+				var C5Geo = new THREE.BoxGeometry(width, medium, width);
+				var C5 = new THREE.Mesh(C5Geo, buildingMaterial);
+				C5.position.set(-(width+10), medium/2, -(rad + width/2));
+				scene.add(C5);
+
+				C5.sprite = makeTextSprite( " C-5 ",
+					{ fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				C5.sprite .position.set(-width + 15, medium + 10, -rad);
+				scene.add( C5.sprite );
+
+
+				//C-130
+				var C130Geo = new THREE.BoxGeometry(width, medium, width);
+				var C130 = new THREE.Mesh(C130Geo, buildingMaterial);
+				C130.position.set(-2*(width+10), medium/2, -(rad + width/2));
+				scene.add(C130);
+
+				C130.sprite = makeTextSprite( " C-130 ",
+					{ fontsize: 60, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				C130.sprite.position.set(-2*width, medium + 10, -rad);
+				scene.add( C130.sprite );
+
+
+				//Integrated Fighter Group
+				var IFGGeo = new THREE.BoxGeometry(width, large, width);
+				var IFG = new THREE.Mesh(IFGGeo, buildingMaterial);
+				IFG.position.set(-3*(width+10), large/2, -(rad + width/2));
+				scene.add(IFG);
+
+				IFG.sprite = makeTextSprite( "Integrated Fighter Group",
+					{ fontsize: 23, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				IFG.sprite.position.set(-3*width-19, large + 7, -rad);
+				scene.add( IFG.sprite  );
+
+
+				//GREENVILLE AND FIELD TEAM OPERATIONS
+				var GreenvilleGeo = new THREE.BoxGeometry(width, medium, width);
+				var Greenville = new THREE.Mesh(GreenvilleGeo, buildingMaterial);
+				Greenville.position.set(2*(width+10), medium/2, -(rad + width/2));
+				scene.add(Greenville);
+
+				Greenville.sprite = makeTextSprite( "Greenville & Field Team",
+					{ fontsize: 26, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				Greenville.sprite.position.set(2*width + 20, medium + 5, -rad);
+				scene.add( Greenville.sprite);
+
+
+				//COMMERCIAL ENGINE SOLUTIONS
+				var CESGeo = new THREE.BoxGeometry(width, small, width);
+				var CES = new THREE.Mesh(CESGeo, buildingMaterial);
+				CES.position.set(3*(width+10), small/2, -(rad + width/2));
+				scene.add(CES);
+
+				CES.sprite= makeTextSprite( "Comm. Engine Solutions",
+					{ fontsize: 26, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				CES.sprite.position.set(3*width + 30, small, -rad);
+				scene.add( CES.sprite);
+
+
+				//P-3 ORION
+				var P3Geo = new THREE.BoxGeometry(width, medium, width);
+				var P3 = new THREE.Mesh(P3Geo, buildingMaterial);
+				P3.position.set(4*(width+10), medium/2, -(rad + width/2));
+				scene.add(P3);
+
+				P3.sprite = makeTextSprite( "P-3 Orion",
+					{ fontsize: 50, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				P3.sprite.position.set(4*width + 30, medium + 5, -rad);
+				scene.add( P3.sprite );
+
+
+				//U-2 DRAGON LADY
+				var U2Geo = new THREE.BoxGeometry(width, medium, width);
+				var U2 = new THREE.Mesh(U2Geo, buildingMaterial);
+				U2.position.set(-4*(width+10), medium/2, -(rad + width/2));
+				scene.add(U2);
+
+				U2.sprite = makeTextSprite( "U-2 Dragon Lady",
+					{ fontsize: 35, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
+				U2.sprite.position.set(-4*width-40, medium + 7, -rad);
+				scene.add( U2.sprite );
+
+
+	////////////MISSILES AND FIRE CONTROL//
+				//Advanced/Special Programs
+				var AdvancedGeo = new THREE.BoxGeometry(width, medium, width);
+				var Advanced = new THREE.Mesh(AdvancedGeo, buildingMaterial);
+				Advanced.position.set(-rad*.81, medium/2, -rad*.68);
+				Advanced.rotation.y = 2.1*Math.PI/7
+				scene.add(Advanced);
+
+				Advanced.sprite = makeTextSprite( "Advanced Programs",
+					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+				Advanced.sprite.position.set(-rad*.82+4, medium + 5, -rad*.7);
+				scene.add( Advanced.sprite  );
+
+
+				//Air and Missile Defense
+				var AirAndMissileGeo = new THREE.BoxGeometry(width, large, width);
+				var AirAndMissile = new THREE.Mesh(AirAndMissileGeo, buildingMaterial);
+				AirAndMissile.position.set(-rad*.905, large/2, -rad*.57);
+				AirAndMissile.rotation.y = 2.1*Math.PI/7
+				scene.add(AirAndMissile);
+
+				AirAndMissile.sprite = makeTextSprite( "Air&Missile Def.",
+					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+				AirAndMissile.sprite.position.set(-rad*.905+5, large + 5, -rad*.57-2);
+				scene.add( AirAndMissile.sprite );
+
+
+				//FIRE CONTROL AND LOGISTICS SUPPORT SERVICES
+				var FCGeo = new THREE.BoxGeometry(width, large, width);
+				var FC = new THREE.Mesh(FCGeo, buildingMaterial);
+				FC.position.set(-rad*.9805, large/2, -rad*.4505);
+				FC.rotation.y = 2.1*Math.PI/7
+				scene.add(FC);
+
+				FC.sprite= makeTextSprite( "Fire Control & Log.",
+					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+				FC.sprite.position.set(-rad*.9805, large + 5, -rad*.4505);
+				scene.add( FC.sprite );
+
+
+				//TECHNICAL SERVICES
+				var TSGeo = new THREE.BoxGeometry(width, small, width);
+				var TS = new THREE.Mesh(TSGeo, buildingMaterial);
+				TS.position.set(-rad*1.05, small/2, -rad*.33);
+				TS.rotation.y = 2.1*Math.PI/7
+				scene.add(TS);
+
+				TS.sprite = makeTextSprite( "Technical Serv.",
+					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+				TS.sprite.position.set(-rad*1.05+5, small + 5, -rad*.35+7);
+				scene.add( TS.sprite );
+
+
+				//TACTICAL MISSILES AND COMBAT MANEUVER SYSTEMS
+				var TMGeo = new THREE.BoxGeometry(width, large, width);
+				var TM = new THREE.Mesh(TMGeo, buildingMaterial);
+				TM.position.set(-rad*.72, large/2, -rad*.8);
+				TM.rotation.y = 2.1*Math.PI/7
+				scene.add(TM);
+
+				TM.sprite = makeTextSprite( "Tactical Missiles & Comb.",
+					{ fontsize: 25, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
+				TM.sprite.position.set(-rad*.72-5, large + 5, -rad*.8-5);
+				scene.add( TM.sprite );
+
+
+	////////////MISSION AND SYSTEMS TRAINING
+				//INTEGRATED WARFARE SYSTEMS AND SENSORS
+				var IWGeo = new THREE.BoxGeometry(width, large, width);
+				var IW = new THREE.Mesh(IWGeo, buildingMaterial);
+				IW.position.set(rad*.72, large/2, -rad*.8);
+				IW.rotation.y = -2.1*Math.PI/7
+				scene.add(IW);
+
+				IW.sprite = makeTextSprite( "Integrated Warfare",
+					{ fontsize: 30, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+				IW.sprite.position.set(rad*.72-4, large + 5, -rad*.8);
+				scene.add( IW.sprite );
+
+				//SHIP & AVIATION SYSTEMS
+				var SAGeo = new THREE.BoxGeometry(width, medium, width);
+				var SA = new THREE.Mesh(SAGeo, buildingMaterial);
+				SA.position.set(rad*.81, medium/2, -rad*.68);
+				SA.rotation.y = -2.1*Math.PI/7
+				scene.add(SA);
+
+				SA.sprite = makeTextSprite( "Ship & Aviation Sys",
+					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+				SA.sprite.position.set(rad*.81+4, medium + 5, -rad*.68+5);
+				scene.add( SA.sprite );
+
+
+				//SUSTAINABILITY TECHNOLOGIES
+				var SustainGeo = new THREE.BoxGeometry(width, small, width);
+				var Sustain = new THREE.Mesh(SustainGeo, buildingMaterial);
+				Sustain.position.set(rad*.905, small/2, -rad*.57);
+				Sustain.rotation.y = -2.1*Math.PI/7
+				scene.add(Sustain);
+
+				Sustain.sprite = makeTextSprite( "Sustainability Tech.",
+					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+				Sustain.sprite.position.set(rad*.905+4, small + 5, -rad*.57+5);
+				scene.add( Sustain.sprite );
+
+
+				//TRAINING AND LOGISTICS SOLUTIONS
+				var TLGeo = new THREE.BoxGeometry(width, large, width);
+				var TL = new THREE.Mesh(TLGeo, buildingMaterial);
+				TL.position.set(rad*.9805, large/2, -rad*.4505);
+				TL.rotation.y = -2.1*Math.PI/7
+				scene.add(TL);
+
+				TL.sprite = makeTextSprite( "Training and Logistics",
+					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+				TL.sprite.position.set(rad*.9805+4, large + 5, -rad*.4505+5);
+				scene.add( TL.sprite );
+
+
+				//UNDERSEA SYSTEMS
+				var USGeo = new THREE.BoxGeometry(width, medium, width);
+				var US = new THREE.Mesh(USGeo, buildingMaterial);
+				US.position.set(rad*1.05, medium/2, -rad*.33);
+				US.rotation.y = -2.1*Math.PI/7
+				scene.add(US);
+
+				US.sprite = makeTextSprite( "Undersea Systems",
+					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
+				US.sprite.position.set(rad*1.05, medium + 5, -rad*.33+10);
+				scene.add( US.sprite );
+
+
+	////////////SPACE SYSTEMS
+				//Advanced Technology Center
+				var ATCGeo = new THREE.BoxGeometry(width, large, width);
+				var ATC = new THREE.Mesh(ATCGeo, buildingMaterial);
+				ATC.position.set(rad*1.05, large/2, rad*.20);
+				ATC.rotation.y = -3.9*Math.PI/7
+				scene.add(ATC);
+
+				ATC.sprite = makeTextSprite( "Adv. Technology Center",
+					{ fontsize: 25, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+				ATC.sprite.position.set(rad*1.05, large + 5, rad*.2);
+				scene.add( ATC.sprite );
+
+
+				//Civil Space
+				var CSGeo = new THREE.BoxGeometry(width, medium, width);
+				var CS = new THREE.Mesh(CSGeo, buildingMaterial);
+				CS.position.set(rad*1.07, medium/2, rad*.06);
+				CS.rotation.y = -3.9*Math.PI/7
+				scene.add(CS);
+
+				CS.sprite = makeTextSprite( "Civil Space",
+					{ fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+				CS.sprite.position.set(rad*1.07, medium + 5, rad*.06 + 15);
+				scene.add( CS.sprite );
+
+
+				//Commercial Space
+				var CommercialGeo = new THREE.BoxGeometry(width, medium, width);
+				var Commercial = new THREE.Mesh(CommercialGeo, buildingMaterial);
+				Commercial.position.set(rad*1.085, medium/2, -rad*.08);
+				Commercial.rotation.y = -3.9*Math.PI/7
+				scene.add(Commercial);
+
+				Commercial.sprite = makeTextSprite( "Commercial Space",
+					{ fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+				Commercial.sprite.position.set(rad*1.085, medium + 5, -rad*.08);
+				scene.add( Commercial.sprite );
+
+
+				//Military Space
+				var MilitaryGeo = new THREE.BoxGeometry(width, medium, width);
+				var Military = new THREE.Mesh(MilitaryGeo, buildingMaterial);
+				Military.position.set(rad*1.0295, medium/2, rad*.33);
+				Military.rotation.y = -3.9*Math.PI/7
+				scene.add(Military);
+
+				Military.sprite = makeTextSprite( "Military Space",
+					{ fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+				Military.sprite.position.set(rad*1.0295, medium + 5, rad*.35);
+				scene.add( Military.sprite );
+
+
+				//SMD
+				var SMDGeo = new THREE.BoxGeometry(width, small, width);
+				var SMD = new THREE.Mesh(SMDGeo, buildingMaterial);
+				SMD.position.set(rad*1, small/2, rad*.465);
+				SMD.rotation.y = -3.9*Math.PI/7
+				scene.add(SMD);
+
+				SMD.sprite = makeTextSprite( "SMD",
+					{ fontsize: 40, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+				SMD.sprite.position.set(rad*1, small + 5, rad*.5);
+				scene.add( SMD.sprite );
+
+				//Special Programs
+				var SPGeo = new THREE.BoxGeometry(width, large, width);
+				var SP = new THREE.Mesh(SPGeo, buildingMaterial);
+				SP.position.set(rad*.98, large/2, rad*.6);
+				SP.rotation.y = -3.9*Math.PI/7
+				scene.add(SP);
+
+				SP.sprite = makeTextSprite( "Special Programs",
+					{ fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
+				SP.sprite.position.set(rad*.98, large + 5, rad*.6);
+				scene.add( SP.sprite );
+
+
+////////////////INFORMATION SYSTEMS AND GLOBAL SOLUTIONS
+				//Civil IS&GS
+				var CISGeo = new THREE.BoxGeometry(width, medium, width);
+				var CIS = new THREE.Mesh(CISGeo, buildingMaterial);
+				CIS.position.set(-rad*1.07, medium/2, rad*.06);
+				CIS.rotation.y = 3.9*Math.PI/7
+				scene.add(CIS);
+
+				CIS.sprite = makeTextSprite( "Civil ISGS",
+					{ fontsize: 40, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.8} } );
+				CIS.sprite.position.set(-rad*1.07, medium+5, rad*.06-10);
+				scene.add( CIS.sprite );
+
+				//Commercial Markets
+				var CMGeo = new THREE.BoxGeometry(width, large, width);
+				var CM = new THREE.Mesh(CMGeo, buildingMaterial);
+				CM.position.set(-rad*1.05, large/2, rad*.20);
+				CM.rotation.y = 3.9*Math.PI/7
+				scene.add(CM);
+
+				CM.sprite = makeTextSprite( "Commercial Markets",
+					{ fontsize: 30, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
+				CM.sprite.position.set(-rad*1.05, large + 2, rad*.20);
+				scene.add( CM.sprite );
+
+				//Defense and Intelligence Solutions
+				var DISGeo = new THREE.BoxGeometry(width, small, width);
+				var DIS = new THREE.Mesh(DISGeo, buildingMaterial);
+				DIS.position.set(-rad*1.0295, small/2, rad*.33);
+				DIS.rotation.y = 3.9*Math.PI/7
+				scene.add(DIS);
+
+				DIS.sprite = makeTextSprite( "Def. and Intel Solutions",
+					{ fontsize: 25, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
+				DIS.sprite.position.set(-rad*1.0295, small + 5, rad*.33);
+				scene.add( DIS.sprite );
+
+
+				//Global Solutions
+				var GSGeo = new THREE.BoxGeometry(width, small, width);
+				var GS = new THREE.Mesh(GSGeo, buildingMaterial);
+				GS.position.set(-rad*1, small/2, rad*.465);
+				GS.rotation.y = 3.9*Math.PI/7
+				scene.add(GS);
+
+				GS.sprite = makeTextSprite( " Global Solutions ",
+					{ fontsize: 30, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
+				GS.sprite.position.set(-rad*1, small + 5, rad*.465);
+				scene.add( GS.sprite );
+
+
+////////////////LM INTERNATIONAL
+				//LM UK
+				var LMUKGeo = new THREE.BoxGeometry(width, large, width);
+				var LMUK = new THREE.Mesh(LMUKGeo, buildingMaterial);
+				LMUK.position.set(-rad*.585, large/2, rad*.915);
+				LMUK.rotation.y = 5.7*Math.PI/7
+				scene.add(LMUK);
+
+				//LM UAE
+				var LMUAEGeo = new THREE.BoxGeometry(width, large, width);
+				var LMUAE = new THREE.Mesh(LMUAEGeo, buildingMaterial);
+				LMUAE.position.set(-rad*.70, large/2, rad*.84);
+				LMUAE.rotation.y = 5.7*Math.PI/7
+				scene.add(LMUAE);
+
+				//LM Canada
+				var LMCGeo = new THREE.BoxGeometry(width, large, width);
+				var LMC = new THREE.Mesh(LMCGeo, buildingMaterial);
+				LMC.position.set(-rad*.46, large/2, rad*1.00);
+				LMC.rotation.y = 5.7*Math.PI/7
+				scene.add(LMC);
+
+////////////////ENTERPRISE OPERATIONS
+				//ATL
+				var ATLGeo = new THREE.BoxGeometry(width, large, width);
+				var ATL= new THREE.Mesh(ATLGeo, buildingMaterial);
+				ATL.position.set(rad*.585, large/2, rad*.915);
+				ATL.rotation.y = -6*Math.PI/7
+				scene.add(ATL);
+
+
+				//CHQ
+				var CHQGeo = new THREE.BoxGeometry(width, large, width);
+				var CHQ = new THREE.Mesh(CHQGeo, buildingMaterial);
+				CHQ.position.set(rad*.70, large/2, rad*.84);
+				CHQ.rotation.y = -6*Math.PI/7
+				scene.add(CHQ);
+
+				//Washington Operations
+				var WOGeo = new THREE.BoxGeometry(width, large, width);
+				var WO= new THREE.Mesh(WOGeo, buildingMaterial);
+				WO.position.set(rad*.46, large/2, rad*.98);
+				WO.rotation.y = -6*Math.PI/7
+				scene.add(WO);
+
+				//EBS
+				var EBSGeo = new THREE.BoxGeometry(width, large, width);
+				var EBS= new THREE.Mesh(EBSGeo, buildingMaterial);
+				EBS.position.set(rad*.34, large/2, rad*1.04);
+				EBS.rotation.y = -6*Math.PI/7
+				scene.add(EBS);
+
+				//CETO
+				var CETOGeo = new THREE.BoxGeometry(width, large, width);
+				var CETO= new THREE.Mesh(CETOGeo, buildingMaterial);
+				CETO.position.set(rad*.21, large/2, rad*1.09);
+				CETO.rotation.y = -6*Math.PI/7
+				scene.add(CETO);
+
+
+////////////LM RESOURCES
+			var LMResources = []
+			var LMRMisc = []
+
+			function generateResources() {
+				scale = 85.2
+				x = scale
+				z = 0
+				for (i=0; i<4; i++) {
+					var buildingGeom = new THREE.BoxGeometry(width, large, width);
+					var buildingMate = new THREE.MeshLambertMaterial( {color: 0x00CCCC})
+					var buildingGM = new THREE.Mesh(buildingGeom, buildingMate);
+					scene.add(buildingGM);
+					buildingGM.position.set(x, large/2, z);
+					if (x==0 && z==-scale) {x-=scale; z+=scale};
+					if (x==0 && z==scale) {z-=2*scale};
+					if (x==scale && z==0) {x-=scale; z+=scale};
+					LMResources.push(buildingGM);
+				}
+
+				var cylindergeo = new THREE.CylinderGeometry(30, scale+width/2, 30, 50, 50);
+				var cylindermat = new THREE.MeshLambertMaterial({color: 0x00A3A3});
+				var cylinder = new THREE.Mesh(cylindergeo, cylindermat);
+				scene.add(cylinder);
+				LMRMisc.push(cylinder);
+				cylinder.position.set(0, large + 30/2, 0);
+
+			}
+
+			generateResources();
+
+
+
+///////////FUNCTIONALITY BEGINS
+			document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+			var allBuildings = [U2, IFG, C130, C5, F35, SkunkWorks, Greenville, CES,
+							P3, TS, FC, AirAndMissile, Advanced, TM,
+							IW, SA, Sustain, TL, US,
+							GS, DIS, CM, CIS,
+							Commercial, CS, ATC, Military, SMD, SP,
+							LMC, LMUK, LMUAE,
+							CHQ, ATL, WO, EBS, CETO]
+
+			//CREATE LIST allSprites. CONTAINS ALL SPRITES
+			function listAllSprites() {
+				allSprites = []
+				for (var i=0; i<allBuildings.length; i++){
+					allSprites.push(allBuildings[i].sprite)
+				}
+			}
+			listAllSprites();
+
+
+			var Aeronautics = [F35, SkunkWorks, C130, CES, IFG, U2, C5, Greenville, P3];
+			Aeronautics.floors = []
+
+			var MFC = [Advanced, AirAndMissile,FC, TS, TM]
+			MFC.floors = []
+
+			var MST = [IW, SA, Sustain, TL, US]
+			MST.floors = []
+
+			var SS = [ATC, CS, Commercial, Military, SMD, SP]
+			SS.floors = []
+
+			var ISGS = [CIS, CM, DIS, GS]
+			ISGS.floors = []
+
+			var EO = [CHQ, WO, ATL, CETO, EBS]
+			EO.floors = []
+
+			var LMI = [LMUAE, LMC, LMUK]
+			LMI.floors = []
+
+			LMResources.floors = []
+
+			var subunits = [Aeronautics, MFC, MST, SS, ISGS, EO, LMI, LMResources]
+			subunits.floors = [Aeronautics.floors, MFC.floors, MST.floors, SS.floors, ISGS.floors, EO.floors, LMI.floors, LMResources.floors]
+
+			////CREATE LISTS OF ALL BUILDING.SPRITES FOR EACH SUBUNIT
+			function listSprites(){
+				for (var i=0; i<subunits.length; i++){
+					for (var k=0; k<allBuildings.length; k++){
+						if (findBuilding(allBuildings[k]) == subunits[i]){
+							if (subunits[i].sprites == null) {
+								subunits[i].sprites = [allBuildings[k].sprite]
+							}
+							else {
+								subunits[i].sprites.push(allBuildings[k].sprite)
+							}
+						}
+					}
+				}
+			}
+
+			listSprites();
+
+
+////////////GENERATE Partners AND SUPPLIERS
+
+			var Partners = [];
+			var Suppliers = [];
+			var Customers = [];
+
+			var allHeights = [large, verylarge, medium]
+			
+			function randomHeight() {
+				return allHeights[Math.floor(Math.random()*2)]}
+
+			function generatePartners(buildingsList) {
+				for (var i=0; i<buildingsList.length; i+=3) {
+					var theHeight = randomHeight();
+					buildingsList[i].Partners = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
+															new THREE.MeshLambertMaterial({color: 0x7A2900}) );
+					buildingsList[i].Partners.position.x = buildingsList[i].position.x  * (rad2 / rad);
+					buildingsList[i].Partners.position.y = theHeight/2;
+					buildingsList[i].Partners.position.z = buildingsList[i].position.z * (rad2 / rad);
+					buildingsList[i].Partners.rotation.y = buildingsList[i].rotation.y;
+					Partners.push(buildingsList[i].Partners);
+					scene.add(buildingsList[i].Partners);
+				}
+			}
+			function generateSupplier(buildingsList) {
+				for (var i=1; i<buildingsList.length; i+=3) {
+					var theHeight = randomHeight();
+					buildingsList[i].supplier = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
+															new THREE.MeshLambertMaterial({color: 0x999966}) );
+					buildingsList[i].supplier.position.x = buildingsList[i].position.x  * (rad3 / (rad + 50));
+					buildingsList[i].supplier.position.y = theHeight/2;
+					buildingsList[i].supplier.position.z = buildingsList[i].position.z * (rad3 / (rad+ 50));
+					buildingsList[i].supplier.rotation.y = buildingsList[i].rotation.y;
+					Suppliers.push(buildingsList[i].supplier);
+					scene.add(buildingsList[i].supplier);
+				}
+			}
+			function generateCustomers(buildingsList) {
+				for (var i=2; i<buildingsList.length; i+=3) {
+					var theHeight = randomHeight();
+					buildingsList[i].customer = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
+															new THREE.MeshLambertMaterial({color: 0xE68AE6}) );
+					buildingsList[i].customer.position.x = buildingsList[i].position.x  * (rad4 / (rad + 50));
+					buildingsList[i].customer.position.y = theHeight/2;
+					buildingsList[i].customer.position.z = buildingsList[i].position.z * (rad4 / (rad+ 50));
+					buildingsList[i].customer.rotation.y = buildingsList[i].rotation.y;
+					Customers.push(buildingsList[i].customer);
+					scene.add(buildingsList[i].customer);
+				}
+			}
+
+			generatePartners(allBuildings);
+			generateSupplier(allBuildings);
+			generateCustomers(allBuildings);
+
+
+////////////CREATE ACTIVE PROPERTY FOR ALL BUILDINGS (ie. MFC.active => true)
+			//defines .active property as true for all subunits
+			function activeTrue() {
+				for (var i=0; i<subunits.length; i++) {subunits[i].active = true}
+			}
+			
+			//defines .active property as false for all buildings
+			function activeFalse() {
+				for (var i=0; i<subunits.length; i++) {subunits[i].active = false}
+			}
+
+			activeTrue();
+
+			Suppliers.active = true;
+			Partners.active = true;
+			Customers.active = true;
+			
+////////////FLOOR OUTLINE GENERATOR
+			var FloorGeo = new THREE.BoxGeometry(width, floorheight, width);
+
+			var floorsList = [];
+
+			//ASSIGN COLORS TO BE USED FOR FLOORS
+			for (i=0; i<Aeronautics.length; i++) {
+				Aeronautics[i].color = 0x0000FF}
+			for (i=0; i<MST.length; i++) {
+				MST[i].color = 0xFF9900}
+			for (i=0; i<MFC.length; i++) {
+				MFC[i].color = 0xFF4545}
+			for (i=0; i<SS.length; i++) {
+				SS[i].color = 0x30FF30}
+			for (i=0; i<ISGS.length; i++) {
+				ISGS[i].color = 0xA319A3}
+			for (i=0; i<EO.length; i++) {
+				EO[i].color = 0xB8860B}
+			for (i=0; i<LMI.length; i++) {
+				LMI[i].color = 0x00006F}
+			for (i=0; i<LMResources.length; i++) {
+				LMResources[i].color = 0xDAA520}
+
+
+			function createFloors(building) {
+			//CREATES FLOOR OUTLINES FOR ONE BUILDING
+				var floorposition = 0;
+				//currentfloors array exists as a list for all floors generated for this one building.
+				//currentfloors used for individual building's floors property (building.floors = currentfloors after looping)
+				var currentfloors = [];
+				//Find Building Height//
+				//CREATES TEMPORARY INVISIBLE VECTOR WITH SAME POINTS AS THE OBJECT. From there can detext sizes of objects dimensions
+				var box = new THREE.Box3().setFromObject(building);
+				buildingHeight = box.size().y;
+				//Generate Buildings
+				for (i = 0; i<buildingHeight/15; i++) {
+					var floor = new THREE.Mesh( FloorGeo, new THREE.MeshBasicMaterial({ color: building.color, side: THREE.BackSide } ) );
+					floor.position.x = building.position.x;
+					floor.position.z = building.position.z;
+					floor.position.y = floorposition + floorheight/2;
+					floor.scale.multiplyScalar(1.07);
+					floor.rotation.y = building.rotation.y
+					scene.add(floor);
+					//floorsList exists as list to hold all floors that are generated
+					floorsList.push(floor);
+					currentfloors.push(floor);
+					floorposition += 15
+				}
+				//GIVE BUILDING THE .floors PROPERTY
+				building.floors = currentfloors
+
+				//ADD THE FLOORS TO onDocumentMouseDown AND onDocumentMouseMove TARGET LISTS
+				targetList = removeDups(targetList.concat(floorsList));
+				targetList2 = removeDups(targetList2.concat(floorsList));
+
+				findBuilding(building).floors.push(building.floors);
+			}
+
+			function generateFloors(listOfBuildings) {
+				for (var i=0; i<listOfBuildings.length; i++) {
+					createFloors(listOfBuildings[i])
+				}
+			}
+
+
+			generateFloors(allBuildings);
+			generateFloors(LMResources);
+
+			//REMOVE LMResources.floors FROM floorsList SO restoreSubunits() DOES NOT REMOVE LMResources.floors
+			floorsList = filter(openFloors(LMResources.floors), floorsList);
+
+
+
+			//ASSIGN FLOORS NUMBER (building.floors[i].number)
+			function floorNumbers() {
+				for (i=0; i<subunits.floors.length; i++) {
+					for (j=0; j<subunits.floors[i].length; j++) {
+						var floornumber = 1;
+						for (k=0; k<subunits.floors[i][j].length; k++) {
+							subunits.floors[i][j][k].number = floornumber;
+							floornumber += 1;
+						}
+					}
+				}
+			}
+
+			floorNumbers();
+
+
+////////////LMResources CLICKABILITY
+
+			//ASSIGN ALL RESOURCE BUILDINGS SAME CALLBACK. CALLBACK WILL OPEN THE DIV 'videos'
+			function LMResourcesClickability() {
+				for (var a=0; a<LMResources.length; a++) {
+					for (var b=0; b<LMResources[a].floors.length; b++) {
+						LMResources[a].floors[b].callback = function() {
+							document.getElementById('videos').style
+							.display='block';document.getElementById('fade').style.display='block';
+							mouseActive = false
+						}
+					}
+
+				}
+			}
+
+			LMResourcesClickability();
+
+			//RECURSIVELY GIVES ALL FLOORS IN building CALLBACK TO OPEN divName
+			function assignCalls(building, divName) {
+				for (var i=0; i<building.floors.length; i++) {
+					building.floors[i].callback = function() {
+						document.getElementById(divName).style.display='block';
+						document.getElementById('fade').style.display='block';
+						mouseActive = false;
+					}
+				}
+			}
+
+			assignCalls(C5, 'C5Box');
+			assignCalls(SkunkWorks, 'SkunkWorksBox');
+			assignCalls(F35, 'F35floor20');
+
+
+////////////FILTER FUNCTIONS
+			//Determines if obj is in array a
+			function contains(a, obj) {
+				for (var i=0; i < a.length; i++) {
+					if (a[i] == obj) {
+						return true;
+					}
+				}
+				return false;
+			}
+
+			function findBuilding(building) {
+			//TAKES building AND RETURNS WHAT SUBUNIT IT IS A PART OF (includes LMResources)
+				var thesolution = []
+				for (i=0; i<subunits.length; i++) {
+					if (contains(subunits[i], building)) {
+						return subunits[i];
+					}
+				}
+				return thesolution
+			}
+
+
+			function removeDups(origArr) {
+				var newArr = [],
+					origLen = origArr.length,
+					found,
+					x, y;
+
+				for ( x = 0; x < origLen; x++ ) {
+					found = undefined;
+					for ( y = 0; y < newArr.length; y++ ) {
+						if ( origArr[x] === newArr[y] ) {
+						  found = true;
+						  break;
+						}
+					}
+					if ( !found) newArr.push( origArr[x] );
+				}
+				return newArr;
+			}
+
+
+			function filter(smallList, bigList) {
+			//REMOVES ALL ELEMENTS IN smallList FROM bigList//
+				var solution = bigList.slice();
+				for (var i=0; i < smallList.length; i++) {
+					var index = solution.indexOf(smallList[i]);
+					if (contains(bigList, smallList[i])) {
+						solution.splice(index, 1);
+					}
+				}
+				return solution;
+			}
+
+
+			function removeAll(array){
+			//REMOVES ALL ITEMS IN INPUT ARRAY FROM SCENE//
+				for (var i=0; i<array.length; i++) {
+					scene.remove(array[i]);
+				}
+			}
+
+			function addAll(array){
+			//ADDS ALL ITEMS IN INPUT ARRAY INTO THE SCENE//
+				for (var i=0; i<array.length; i++) {
+					scene.add(array[i]);
+				}
+			}
+
+			function removeSubunitFloors(subunitfloors) {
+				for (var i=0; i<subunitfloors.length; i++) {
+					for (var k=0; k<subunitfloors[i].length; k++) {
+						scene.remove(subunitfloors[i][k])
+					}
+				}
+			}
+
+			function addSubunitFloors(subunitfloors) {
+				for (var i=0; i<subunitfloors.length; i++) {
+					for (var k=0; k<subunitfloors[i].length; k++) {
+						scene.add(subunitfloors[i][k])
+					}
+				}
+			}
+
+			function openFloors(list) {
+			//Explodes nested arrays within subunit.floors array.
+				var solution = []
+				for (i=0; i<list.length; i++) {
+					for (k=0; k<list[i].length; k++) {
+						solution.push(list[i][k])
+					}
+				}
+				return solution
+			}
+
+			function subunitFilter(subunit) {
+				if ( subunit.active) {
+					removeSubunitFloors(subunit.floors);
+					removeAll(subunit);
+					removeAll(subunit.sprites);
+					subunit.active = false;
+					targetList2 = filter(openFloors(subunit.floors), targetList);
+				}
+				else {
+					addSubunitFloors(subunit.floors);
+					addAll(subunit);
+					addAll(subunit.sprites);
+					subunit.active = true;
+					targetList2 = filter(openFloors(subunit.floors), targetList)
+					}
+			}
+			
+
+			//Checks if all subunits are active. Uses list 'subunits' that's been hard-coded
+			function allActive() {
+				for (i=0; i<subunits.length; i++) {
+					if (subunits[i].active == false){
+						return false;
+					}
+				}
+			return true
+			}
+			
+			//Filters entire LMCOville (subunit portion)
+			function restoreSubunits(){
+				if (allActive()){
+					removeAll(floorsList);
+					removeAll(allBuildings);
+					removeAll(allSprites);
+					activeFalse();
+					//targetList = filter(allOutlines, targetList);
+					targetList2 = filter(floorsList, targetList2);
+				}
+				else {
+					addAll(floorsList);
+					addAll(allBuildings);
+					addAll(allSprites);
+					activeTrue();
+					//targetList = removeDups(targetList.concat(allOutlines));
+					targetList2 = removeDups(targetList2.concat(floorsList));
+				}
+			}
+
+			//MUST BE SEPERATE FILTER SINCE IT IS NOT ONLY MADE OF BUILDINGS (LMRMisc)
+			function LMResourcesfilter() {
+				if (LMResources.active) {
+					removeSubunitFloors(LMResources.floors);
+					removeAll(LMResources);
+					removeAll(LMRMisc); //DIFFERENT PART THAN NORMAL FILTER
+					LMResources.active = false
+					targetList2 = filter(openFloors(LMResources.floors), targetList2);
+				}
+				else {
+					addSubunitFloors(LMResources.floors);
+					addAll(LMResources);
+					addAll(LMRMisc);
+					LMResources.active = true;
+					targetList2 = removeDups(targetList2.concat(openFloors(LMResources.floors), targetList2));
+				}
+			}
+			
+			//FILTER FOR CUSTOMERS, PARTNERS, SUPPLIERS. Does not involve floors or targetList''s at the moment
+			function outsideFilter(list) {
+				if (list.active) {
+					removeAll(list);
+					list.active = false;
+				}
+				else {
+					addAll(list);
+					list.active = true;
+				}
+			}
+
+			function onDocumentMouseMove( event )
+			{
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+			}
+
+
+			function onDocumentMouseDown( event )
+			{
+				// the following line would stop any other event handler from firing
+				// (such as the mouses TrackballControls)
+				event.preventDefault();
+
+				console.log("Click.");
+
+				// update the mouse variable
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+				// find intersections
+
+				// create a Ray with origin at the mouse position
+				//   and direction into the scene (camera direction)
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				vector.unproject(camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+				// create an array containing all objects in the scene with which the ray intersects
+				var intersects = ray.intersectObjects( targetList2 );
+
+
+				// if there is one (or more) intersections
+				if ( intersects.length > 0 )
+				{
+					console.log("Hit @ " + toString( intersects[0].point ) );
+					intersects[0].object.callback();
+
+				}
+
+			}
+
+
+
+			function toString(v) { return "[ " + v.x + ", " + v.y + ", " + v.z + " ]"; }
+
+			function update()
+			{
+				// find intersections
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				vector.unproject(camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+				// create an array containing all objects in the scene with which the ray intersects
+				var intersects = ray.intersectObjects( targetList2 );
+
+				// INTERSECTED = the object in the scene currently closest to the camera
+				//		and intersected by the Ray projected from the mouse position
+
+
+				// if there is one (or more) intersections
+				if ( intersects.length > 0 )
+				{
+					// if the closest object intersected is not the currently stored intersection object
+					if ( intersects[ 0 ].object != INTERSECTED )
+					{
+						// restore previous intersection object (if it exists) to its original color
+						if ( INTERSECTED )
+							INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+						// store reference to closest object as current intersection object
+						INTERSECTED = intersects[ 0 ].object;
+						// store color of closest object (for later restoration)
+						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+
+						// set a new color for closest object
+						INTERSECTED.material.color.setHex( 0xffffff );
+
+
+					}
+				}
+				else // there are no intersections
+				{
+					// restore previous intersection object (if it exists) to its original color
+					if ( INTERSECTED )
+						INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+					// remove previous intersection object reference
+					//     by setting current intersection object to "nothing"
+					INTERSECTED = null;
+				}
+
+				if (mouse.y > 0.77 || mouseActive==false) {
+					document.removeEventListener('mousedown', onDocumentMouseDown);}
+				else {
+					document.addEventListener('mousedown', onDocumentMouseDown, false)}
+
+
+			};
+
+			function animate()
+			{
+				requestAnimationFrame( animate );
+				render();
+				update();
+
+			}
+
+			function render()
+			{
+
+				renderer.render(scene, camera)
+
+
+			};
+
+			animate();
+
+
+
+
+		</script>
+	</body>
+</html>

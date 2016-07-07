@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>F35:Floor 20:Room 2</title>
+    </head>
+		<style>
+			.black_overlay{
+				display: none;
+				position: absolute;
+				top: 1%;
+				left: 1%;
+				width: 99%;
+				height: 99%;
+				background-color: black;
+				z-index:1001;
+				-moz-opacity: 0.8;
+				opacity:.80;
+				filter: alpha(opacity=80);
+			}
+			.white_content {
+				display: none;
+				position: absolute;
+				top: 1%;
+				left: 1%;
+				width: 200px;
+				height: 20px;
+				padding: 5px;
+				border: 4px solid orange;
+				background-color: white;
+				z-index:1002;
+				overflow-y: none;
+
+			img.opacity {
+				opacity: 0.8;
+				filter: alpha(opacity=80);
+				}
+
+			img.opacity:hover {
+				opacity: 1;
+				filter: alpha(opacity=100);
+				}
+
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+		<style type="text/css">
+			#tfheader{
+				background-color:#c3dfef;
+			}
+			#tfnewsearch{
+				float:right;
+				padding:20px;
+			}
+			.tftextinput{
+				margin: 0;
+				padding: 5px 15px;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size:14px;
+				border:1px solid #0076a3; border-right:0px;
+				border-top-left-radius: 5px 5px;
+				border-bottom-left-radius: 5px 5px;
+			}
+			.tfbutton {
+				margin: 0;
+				padding: 5px 15px;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size:14px;
+				outline: none;
+				cursor: pointer;
+				text-align: center;
+				text-decoration: none;
+				color: #ffffff;
+				border: solid 1px #0076a3; border-right:0px;
+				background: #0095cd;
+				background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+				background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+				border-top-right-radius: 5px 5px;
+				border-bottom-right-radius: 5px 5px;
+			}
+			.tfbutton:hover {
+				text-decoration: none;
+				background: #007ead;
+				background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+				background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+			}
+			/* Fixes submit button height problem in Firefox */
+			.tfbutton::-moz-focus-inner {
+			  border: 0;
+			}
+			.tfclear{
+				clear:both;
+			}
+		</style>
+
+		<style type="text/css">
+			.chatContainer {
+				width: 20%;
+				height: 30%;
+				border: 2px solid #ddd;
+			}
+
+			.chatContainer > .chatHeader {
+				.width: 100%;
+				background: white;
+				padding: 5px;
+				border-bottom: 1px solid #ddd;
+			}
+
+			.chatContainer > .chatHeader h3 {
+				.margin: 0;
+				padding: 0;
+
+				font-weight: 400;
+				color:#333;
+			}
+
+			.chatContainer > .chatMessages {
+				height: 70%;
+				border-bottom: 1px solid #ddd;
+				overflow-y: scroll;
+				background: white;
+			}
+
+			.chatContainer > .chatBottom form input[type='submit'] {
+				padding: 6px;
+				background: white;
+				border: 1px solid #ddd;
+				cursor: pointer;
+			}
+
+			.chatContainer > .chatBottom form input[type='text'] {
+				width: 62%;
+				padding: 3px;
+				padding-left: 10px;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				margin: 5px;
+				height: 30px;
+			}
+
+		</style>
+
+    <body>
+		<div id="currenttime" class="white_content"></div>
+		<div id="searchbar">
+			<div style="position: absolute; right: 10px; top: 20px; width: 400px; height: 30px">
+				<form action="http://127.0.0.1:5000" id="tfnewsearch" method="POST" target="_blank">
+						<input type="text" class="tftextinput" name="k" size="30" maxlength="120">
+						<input type="submit" name = "my-search" value="Submit" class="tfbutton">
+				</form>
+				<div class="tfclear"></div>
+			</div>
+		</div>
+
+		<div class='chatContainer' style='position: absolute; bottom: 40px; left: 10px; width: 400px: height: 400px' >
+			<div class='chatHeader'>
+				<h3>F35:Floor 20: Room 2 Chatroom</h3>
+			</div>
+			<div class='chatMessages'></div>
+			<div class='chatBottom'>
+				<form action='#' onSubmit='return false;' id='chatForm'>
+					<input type='hidden' id='name' />
+					<input type='text' name='text' id='text' value='' placeholder='Type your message' />
+					<input type='submit' name='submit' value='Post' />
+				</form>
+			</div>
+		</div>
+
+
+
+		<script src="../../three.min.js"></script>
+		<script src="../../OrbitControls.js"></script>
+		<script src="../../TrackballControls.js"></script>
+		<script src="../../gentilis_bold.typeface.js"></script>
+		<script src="../../gentilis_regular.typeface.js"></script>
+		<script src="../../optimer_bold.typeface.js"></script>
+		<script src="../../optimer_regular.typeface.js"></script>
+		<script src="../../helvetiker_regular.typeface.js"></script>
+		<script src="../../helvetiker_bold.typeface.js"></script>
+		<script src="../../Detector.js"></script>
+		<script src="../../THREEx.FullScreen.js"></script>
+		<script src="../../threex.keyboardstate.js"></script>
+		<script src="../../threex.domevents.js"></script>
+		<script src="../../THREEx.WindowResize.js"></script>
+
+		<script>
+			document.getElementById('currenttime').style.display='block'
+			var mouseActive = true
+			var targetList = [];
+			var targetList1 = [];
+			var projector, mouse = { x:0, y:0 }
+
+			var people = []
+
+		// RENDERER
+			var renderer
+			if ( Detector.webgl )
+				renderer = new THREE.WebGLRenderer( {antialias:true} );
+			else
+				renderer = new THREE.CanvasRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			var keyboard = new THREEx.KeyboardState();
+
+		//CAMERA
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 8000);
+			scene.add(camera);
+
+
+			renderer.autoClear = false
+
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.rotateSpeed = 0.6;
+			controls.zoomSpeed = 1.5;
+			controls.panSpeed = 0.8;
+			controls.maxDistance = 390;
+			controls.minPolarAngle = Math.PI/2
+			controls.maxPolarAngle = Math.PI/2
+			camera.position.set(0, 0, -90);
+			camera.lookAt(new THREE.Vector3(0, 0, 300));
+			controls.target.copy( new THREE.Vector3(0, 0, 300) );
+
+			THREEx.WindowResize(renderer, camera);
+			THREEx.FullScreen.bindKey({ charCode: '`'.charCodeAt(0) });
+
+
+		//LIGHT
+			var light = new THREE.PointLight(0xdddddd);
+			light.position.set(0,-100,300);
+			scene.add(light);
+			var ambientlight = new THREE.AmbientLight( 0xA1A1A1 ); // soft white light
+			scene.add( ambientlight );
+
+		//ROOM BOX
+			var RoomBoxGeometry = new THREE.BoxGeometry(800, 400, 1600);
+			var RoomBoxMaterial = new THREE.MeshLambertMaterial({color:0xFFD683, side: THREE.BackSide})
+			var RoomBox = new THREE.Mesh(RoomBoxGeometry, RoomBoxMaterial)
+			scene.add(RoomBox);
+			RoomBox.position.set(0, 0, 800);
+
+
+		//SKYBOX
+			var skyBoxGeo = new THREE.BoxGeometry(3000, 4000, 4000);
+			var skyBoxMat = new THREE.MeshBasicMaterial({color: 0x00CCFF, side: THREE.BackSide});
+			var skyBox = new THREE.Mesh(skyBoxGeo, skyBoxMat);
+			scene.add(skyBox);
+
+		//PROJECT WIKI
+			var wikiCanvas = document.createElement('canvas');
+			var wikiContext = wikiCanvas.getContext('2d');
+			wikiContext.font = "Bold 30px Arial";
+			wikiContext.fillStyle = "rgba(255,0,0,0.95)";
+			wikiContext.fillText('Current Project Wiki', 0, 90);
+
+			wikiContext.textAlign = "center";
+			wikiContext.textBaseline = "middle";
+
+			// canvas contents will be used for a texture
+			var wikiTexture = new THREE.Texture(wikiCanvas)
+			wikiTexture.needsUpdate = true;
+
+
+			var wikiMaterial = new THREE.MeshBasicMaterial( {map: wikiTexture} );
+
+			var wikiMesh = new THREE.Mesh(
+				new THREE.PlaneGeometry(wikiCanvas.width, wikiCanvas.height),
+				wikiMaterial);
+
+			wikiMaterial.transparent = true;
+
+			wikiMesh.position.set(-390, 50, 400);
+			wikiMesh.scale.multiplyScalar(1);
+			wikiMesh.rotation.y = Math.PI/2
+
+			scene.add( wikiMesh );
+
+			var wikiBox = new THREE.Mesh(
+						new THREE.BoxGeometry(4, 100, 400),
+						new THREE.MeshLambertMaterial({color: 0xffffff})
+						);
+			scene.add(wikiBox);
+			wikiBox.position.set(-400, 50, 400);
+
+			wikiBox.callback = function(){ window.open("https://www.f35.com/about/variants/f35a") }
+
+			targetList1.push(wikiBox);
+
+
+		//PEOPLE
+
+			function makeStar(){
+				var starPoints = [];
+
+				starPoints.push( new THREE.Vector2 (   0,  50 ) );
+				starPoints.push( new THREE.Vector2 (  10,  10 ) );
+				starPoints.push( new THREE.Vector2 (  40,  10 ) );
+				starPoints.push( new THREE.Vector2 (  20, -10 ) );
+				starPoints.push( new THREE.Vector2 (  30, -50 ) );
+				starPoints.push( new THREE.Vector2 (   0, -20 ) );
+				starPoints.push( new THREE.Vector2 ( -30, -50 ) );
+				starPoints.push( new THREE.Vector2 ( -20, -10 ) );
+				starPoints.push( new THREE.Vector2 ( -40,  10 ) );
+				starPoints.push( new THREE.Vector2 ( -10,  10 ) );
+
+				var starShape = new THREE.Shape( starPoints );
+
+				var extrusionSettings = {
+					size: 30, height: 4, curveSegments: 3,
+					bevelThickness: 1, bevelSize: 2, bevelEnabled: false,
+					material: 0, extrudeMaterial: 1
+				};
+
+				var starGeometry = new THREE.ExtrudeGeometry( starShape, extrusionSettings );
+
+				var materialFront = new THREE.MeshBasicMaterial( { color: 0xeeeeee } );
+				var materialSide = new THREE.MeshBasicMaterial( { color: 0xdddddd } );
+
+				//var materialFront = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+				//var materialSide = new THREE.MeshBasicMaterial( { color: 0xff8800 } );
+
+				var materialArray = [ materialFront, materialSide ];
+				var starMaterial = new THREE.MeshFaceMaterial(materialArray);
+				var star = new THREE.Mesh( starGeometry, starMaterial );
+				star.scale.multiplyScalar(1.3);
+				return star
+			};
+
+
+			var star1 = makeStar();
+			star1.position.set(100,-145,700);
+			scene.add(star1);
+			star1.name = "Curtis Daniels"
+
+			var star2 = makeStar();
+			star2.position.set(-200, -145, 600);
+			scene.add(star2);
+			star2.name = "Lee Hudson"
+
+			people.push(star1);
+			people.push(star2);
+
+
+		//FUNCTION TO CREATE TEXT SPRITES
+			function makeTextSprite( message, parameters )
+			{
+				if ( parameters === undefined ) parameters = {};
+
+				var fontface = parameters.hasOwnProperty("fontface") ?
+					parameters["fontface"] : "Arial";
+
+				var fontsize = parameters.hasOwnProperty("fontsize") ?
+					parameters["fontsize"] : 30;
+
+				var borderThickness = parameters.hasOwnProperty("borderThickness") ?
+					parameters["borderThickness"] : 4;
+
+				var borderColor = parameters.hasOwnProperty("borderColor") ?
+					parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+
+				var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+					parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+
+				var canvas = document.createElement('canvas');
+				var context = canvas.getContext('2d');
+				context.font = "Bold " + fontsize + "px " + fontface;
+
+				// get size data (height depends only on font size)
+				var metrics = context.measureText( message );
+				var textWidth = metrics.width;
+
+				// background color
+				context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
+											  + backgroundColor.b + "," + backgroundColor.a + ")";
+				// border color
+				context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+											  + borderColor.b + "," + borderColor.a + ")";
+
+				context.lineWidth = borderThickness;
+				roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+				// 1.4 is extra height factor for text below baseline: g,j,p,q.
+
+				// text color
+				context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+				context.fillText( message, borderThickness, fontsize + borderThickness);
+
+				// canvas contents will be used for a texture
+				var texture = new THREE.Texture(canvas)
+				texture.needsUpdate = true;
+
+				var spriteMaterial = new THREE.SpriteMaterial(
+					{ map: texture, useScreenCoordinates: false} );
+				var sprite = new THREE.Sprite( spriteMaterial );
+				sprite.scale.set(100,50,1.0);
+				return sprite;
+			}
+		function roundRect(ctx, x, y, w, h, r)
+			{
+				ctx.beginPath();
+				ctx.moveTo(x+r, y);
+				ctx.lineTo(x+w-r, y);
+				ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+				ctx.lineTo(x+w, y+h-r);
+				ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+				ctx.lineTo(x+r, y+h);
+				ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+				ctx.lineTo(x, y+r);
+				ctx.quadraticCurveTo(x, y, x+r, y);
+				ctx.closePath();
+				ctx.fill();
+				ctx.stroke();
+			}
+
+		//RECURSIVELY GENERATE TEXT SPRITES
+		function generateSprites() {
+			for (var i=0; i<people.length; i++) {
+				people[i].sprite = makeTextSprite(" " + people[i].name + " ")
+				//scene.add(people[i].sprite)
+				people[i].sprite.position.set(people[i].position.x,people[i].position.y, people[i].position.z - 100)
+			}
+		}
+
+		generateSprites();
+
+
+		//DOCUMENTMOUSEEVENTS
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2();
+
+			document.addEventListener('mousemove', onDocumentMouseMove, false);
+			document.addEventListener('mousedown', onDocumentMouseDown, false)
+
+			function onDocumentMouseMove( event )
+			{
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+			}
+
+
+			var INTERSECTED
+
+			targetList = people.slice()
+
+			function onDocumentMouseDown( event )
+			{
+				// the following line would stop any other event handler from firing
+				// (such as the mouses TrackballControls)
+				event.preventDefault();
+
+				console.log("Click.");
+
+				// update the mouse variable
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+				// find intersections
+
+				// create a Ray with origin at the mouse position
+				//   and direction into the scene (camera direction)
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				vector.unproject(camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+				// create an array containing all objects in the scene with which the ray intersects
+				var intersects = ray.intersectObjects( targetList1 );
+
+
+				// if there is one (or more) intersections
+				if ( intersects.length > 0 )
+				{
+					console.log("Hit @ " + toString( intersects[0].point ) );
+					intersects[0].object.callback();
+
+				}
+
+			}
+
+
+			function update()
+			{
+				// find intersections
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				vector.unproject(camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+				// create an array containing all objects in the scene with which the ray intersects
+				var intersects = ray.intersectObjects( targetList );
+
+				// INTERSECTED = the object in the scene currently closest to the camera
+				//		and intersected by the Ray projected from the mouse position
+
+
+				// if there is one (or more) intersections
+				if ( intersects.length > 0 )
+				{
+					// if the closest object intersected is not the currently stored intersection object
+					if ( intersects[ 0 ].object != INTERSECTED )
+					{
+						// restore previous intersection object (if it exists) to its original color
+						if ( INTERSECTED ) {
+							INTERSECTED.material.materials[0].color.setHex( 0xeeeeee);
+							INTERSECTED.material.materials[1].color.setHex( 0xdddddd)
+							scene.remove(INTERSECTED.sprite);}
+
+						// store reference to closest object as current intersection object
+						INTERSECTED = intersects[ 0 ].object;
+						scene.add(INTERSECTED.sprite);
+
+						// store color of closest object (for later restoration)
+						//INTERSECTED.material.materials[0].color.currentHex = INTERSECTED.material.materials[0].color.getHex();
+						//INTERSECTED.material.materials[1].color.currentHex = INTERSECTED.material.materials[1].color.getHex();
+
+						// set a new color for closest object
+						INTERSECTED.material.materials[0].color.setHex(0xffff00);
+						INTERSECTED.material.materials[1].color.setHex(0xff8800);
+
+					}
+				}
+				else // there are no intersections
+				{
+					// restore previous intersection object (if it exists) to its original color
+					if ( INTERSECTED ) {
+						INTERSECTED.material.materials[0].color.setHex( 0xeeeeee );
+						INTERSECTED.material.materials[1].color.setHex( 0xdddddd );
+						scene.remove(INTERSECTED.sprite);
+					}
+
+					// remove previous intersection object reference
+					//     by setting current intersection object to "nothing"
+					INTERSECTED = null;
+				}
+
+
+
+
+				if (mouse.y > 0.77 || (mouse.x < -0.58 && mouse.y < 0.2)) {
+					document.removeEventListener('mousedown', onDocumentMouseDown);}
+				//if (mouse.x < -0.57 && mouse.y < 0.2) {
+				//	document.removeEventListener('mousedown', onDocumentMouseDown);}
+				else {
+					document.addEventListener('mousedown', onDocumentMouseDown, false)}
+
+
+			};
+
+			function updateClock() {
+				var now = new Date(), // current date
+					months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; // you get the idea
+				var exception
+					function updateException() {
+						if (now.getMinutes().toString().length == 1) {
+							exception = '0' + now.getMinutes().toString()
+						}
+						else {exception = now.getMinutes().toString()}
+					}
+				updateException();
+					time = now.getHours() + ':' + exception, // again, you get the idea
+
+					// a cleaner way than string concatenation
+					date = [now.getDate(),
+							months[now.getMonth()],
+							now.getFullYear()].join(' ');
+
+				// set the content of the element with the ID time to the formatted string
+				document.getElementById('currenttime').innerHTML = [date, time].join(' / ');
+
+				// call this function again in 1000ms
+				setTimeout(updateClock, 1000);
+			}
+			updateClock();
+
+			function animate()
+			{
+				requestAnimationFrame( animate );
+				render();
+				update();
+
+			}
+
+			function render()
+			{
+
+				renderer.render(scene, camera)
+
+			};
+
+			animate();
+
+
+		</script>
+	</body>
+</html>
