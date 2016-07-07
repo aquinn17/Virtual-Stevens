@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>VirtualStevens</title> 
+		<title>VirtualStevens</title>  
 		<style>
 			.black_overlay{
 				display: none;
@@ -1175,6 +1175,7 @@
 				}
 			}  
 			
+
 			function generateCustomers(buildingsList) {
 				for (var i=2; i<buildingsList.length; i+=3) {
 					var theHeight = randomHeight();
@@ -1189,9 +1190,9 @@
 				}
 			} 
 
-			generatePartners(allBuildings);
-			/* generateSupplier(allBuildings); */ 
-			generateCustomers(allBuildings); 
+			/*generatePartners(allBuildings); 
+			 generateSupplier(allBuildings);  
+			 generateCustomers(allBuildings); */
 
 
 ////////////CREATE ACTIVE PROPERTY FOR ALL BUILDINGS (ie. MFC.active => true)
