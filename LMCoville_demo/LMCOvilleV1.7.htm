@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>VirtualStevens</title>
+		<title>VirtualStevens</title> 
 		<style>
 			.black_overlay{
 				display: none;
@@ -1172,7 +1172,7 @@
 			function randomHeight() {
 				return allHeights[Math.floor(Math.random()*2)]}
 
-			function generatePartners(buildingsList) {
+			 function generatePartners(buildingsList) {
 				for (var i=0; i<buildingsList.length; i+=3) {
 					var theHeight = randomHeight();
 					buildingsList[i].Partners = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
@@ -1184,20 +1184,8 @@
 					Partners.push(buildingsList[i].Partners);
 					scene.add(buildingsList[i].Partners);
 				}
-			}
-			function generateSupplier(buildingsList) {
-				for (var i=1; i<buildingsList.length; i+=3) {
-					var theHeight = randomHeight();
-					buildingsList[i].supplier = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
-															new THREE.MeshLambertMaterial({color: 0x999966}) );
-					buildingsList[i].supplier.position.x = buildingsList[i].position.x  * (rad3 / (rad + 50));
-					buildingsList[i].supplier.position.y = theHeight/2;
-					buildingsList[i].supplier.position.z = buildingsList[i].position.z * (rad3 / (rad+ 50));
-					buildingsList[i].supplier.rotation.y = buildingsList[i].rotation.y;
-					Suppliers.push(buildingsList[i].supplier);
-					scene.add(buildingsList[i].supplier);
-				}
-			}
+			}  
+			
 			function generateCustomers(buildingsList) {
 				for (var i=2; i<buildingsList.length; i+=3) {
 					var theHeight = randomHeight();
@@ -1210,11 +1198,11 @@
 					Customers.push(buildingsList[i].customer);
 					scene.add(buildingsList[i].customer);
 				}
-			}
+			} 
 
 			generatePartners(allBuildings);
-			generateSupplier(allBuildings);
-			generateCustomers(allBuildings);
+			/* generateSupplier(allBuildings); */ 
+			generateCustomers(allBuildings); 
 
 
 ////////////CREATE ACTIVE PROPERTY FOR ALL BUILDINGS (ie. MFC.active => true)
