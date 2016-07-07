@@ -396,18 +396,10 @@
 				ring2.rotation.x = 3*Math.PI/2
 				scene.add(ring2);
 
-				var ringgeo3 = new THREE.RingGeometry(rad3, rad4, 100);
-				var ringmat3 = new THREE.MeshLambertMaterial({color:0xADADAD})
-				var ring3 = new THREE.Mesh(ringgeo3, ringmat3);
-				ring3.rotation.x = 3*Math.PI/2;
-				scene.add(ring3);
-
 				
-
-
 	////////////UNIT TITLES
 				//AERONAUTICS TEXT
-				var AeronauticsText = "Aeronautics";
+				var AeronauticsText = "School of Engineering and Sciences";
 				var hash = document.location.hash.substr( 1 );
 
 				var materialFront = new THREE.MeshBasicMaterial({color: 0xffff00});
@@ -439,7 +431,7 @@
 				scene.add(group);
 
 				//MISSILES AND FIRE CONTROL TEXT
-				var MFCText = "Missiles and Fire Control";
+				var MFCText = "School of Bussiness";
 
 				var materialFront = new THREE.MeshBasicMaterial({color: 0xFFAAAF});
 				var materialSide = new THREE.MeshBasicMaterial({color: 0xF00000});
@@ -500,7 +492,7 @@
 				scene.add(group);
 
 				//SPACE SYSTEMS TEXT
-				var SSText = "Space Systems";
+				var SSText = "School of Systems and Enterprises";
 
 				var materialFront = new THREE.MeshBasicMaterial({color: 0x64FF64});
 				var materialSide = new THREE.MeshBasicMaterial({color: 0x00A600});
@@ -531,7 +523,7 @@
 
 
 				//INFORMATION AND GLOBAL SOLUTIONS TEXT
-				var ISGSText = "Information Systems and Global Solutions";
+				var ISGSText = "ATHLETICS";
 
 				var materialFront = new THREE.MeshBasicMaterial({color: 0xB45AB4});
 				var materialSide = new THREE.MeshBasicMaterial({color: 0x780078});
