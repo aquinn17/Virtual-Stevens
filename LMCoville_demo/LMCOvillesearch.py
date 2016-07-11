@@ -10,7 +10,7 @@ specialties = {}
 employees = {}
 
 
-theFile = open('LMCOdata.txt', 'r')
+theFile = open('VIRTUAL STEVENS DATA.txt', 'r')
 for line in theFile:
     employees[line.strip(' ').strip().split(':')[0].lower()] = line.strip().strip(' ').strip().split(':')[1].lower().split(',')
     for i in  line.strip().strip(' ').strip().split(':')[1].lower().split(','):
@@ -46,7 +46,7 @@ file.close(theFile)
 
 @app.route('/')
 def my_search():
-    return render_template("LMCOville.htm")
+    return render_template("LMCOvilleV1.7.htm")
 
 @app.route('/', methods=['POST'])
 def my_search_link():
