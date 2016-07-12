@@ -1087,69 +1087,6 @@
 
 			listSprites();
 
-
-////////////GENERATE Partners AND SUPPLIERS
-
-			var Partners = [];
-			var Suppliers = [];
-			var Customers = [];
-
-			var allHeights = [large, verylarge, medium]
-
-			function randomHeight() {
-				return allHeights[Math.floor(Math.random()*2)]}
-
-			 function generatePartners(buildingsList) {
-				for (var i=0; i<buildingsList.length; i+=3) {
-					var theHeight = randomHeight();
-					buildingsList[i].Partners = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
-															new THREE.MeshLambertMaterial({color: 0x7A2900}) );
-					buildingsList[i].Partners.position.x = buildingsList[i].position.x  * (rad2 / rad);
-					buildingsList[i].Partners.position.y = theHeight/2;
-					buildingsList[i].Partners.position.z = buildingsList[i].position.z * (rad2 / rad);
-					buildingsList[i].Partners.rotation.y = buildingsList[i].rotation.y;
-					Partners.push(buildingsList[i].Partners);
-					scene.add(buildingsList[i].Partners);
-				}
-			}  
-			
-
-			function generateCustomers(buildingsList) {
-				for (var i=2; i<buildingsList.length; i+=3) {
-					var theHeight = randomHeight();
-					buildingsList[i].customer = new THREE.Mesh(new THREE.BoxGeometry(width, theHeight, width),
-															new THREE.MeshLambertMaterial({color: 0xE68AE6}) );
-					buildingsList[i].customer.position.x = buildingsList[i].position.x  * (rad4 / (rad + 50));
-					buildingsList[i].customer.position.y = theHeight/2;
-					buildingsList[i].customer.position.z = buildingsList[i].position.z * (rad4 / (rad+ 50));
-					buildingsList[i].customer.rotation.y = buildingsList[i].rotation.y;
-					Customers.push(buildingsList[i].customer);
-					scene.add(buildingsList[i].customer);
-				}
-			} 
-
-			/*generatePartners(allBuildings); 
-			 generateSupplier(allBuildings);  
-			 generateCustomers(allBuildings); */
-
-
-////////////CREATE ACTIVE PROPERTY FOR ALL BUILDINGS (ie. MFC.active => true)
-			//defines .active property as true for all subunits
-			function activeTrue() {
-				for (var i=0; i<subunits.length; i++) {subunits[i].active = true}
-			}
-
-			//defines .active property as false for all buildings
-			function activeFalse() {
-				for (var i=0; i<subunits.length; i++) {subunits[i].active = false}
-			}
-
-			activeTrue();
-
-			Suppliers.active = true;
-			Partners.active = true;
-			Customers.active = true;
-
 ////////////FLOOR OUTLINE GENERATOR
 			var FloorGeo = new THREE.BoxGeometry(width, floorheight, width);
 
