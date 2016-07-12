@@ -317,7 +317,7 @@
 
 
 				//CENTER PLATFORMS
-				var cylindergeo = new THREE.CylinderGeometry(rad, rad, 1, 100, 100);
+				var cylindergeo = new THREE.CylinderGeometry(rad, rad, 1, 50, 50);
 				var cylindermat = new THREE.MeshLambertMaterial({color:0x4D4D4D});
 				var cylinder = new THREE.Mesh(cylindergeo, cylindermat);
 				scene.add(cylinder);
@@ -562,15 +562,15 @@
 	//////////////AERONAUTICS//
 
 				//F35
-				 var F35Geo = new THREE.BoxGeometry(width, verylarge, width);
+				var F35Geo = new THREE.BoxGeometry(width, verylarge, width);
 				var F35 = new THREE.Mesh(F35Geo, buildingMaterial);
 				F35.position.set(0, verylarge/2, -(rad + width/2));
-				scene.add(F35); 
+				scene.add(F35);
 
 				F35.sprite = makeTextSprite( " F-35 ",
 					{ fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				F35.sprite.position.set(20, verylarge + 20, -rad);
-				scene.add( F35.sprite ); 
+				scene.add( F35.sprite );
 
 
 				//Skunk Works
@@ -671,7 +671,7 @@
 
 	////////////MISSILES AND FIRE CONTROL//
 				//Advanced/Special Programs
-				/* var AdvancedGeo = new THREE.BoxGeometry(width, medium, width);
+				var AdvancedGeo = new THREE.BoxGeometry(width, medium, width);
 				var Advanced = new THREE.Mesh(AdvancedGeo, buildingMaterial);
 				Advanced.position.set(-rad*.81, medium/2, -rad*.68);
 				Advanced.rotation.y = 2.1*Math.PI/7
@@ -680,7 +680,7 @@
 				Advanced.sprite = makeTextSprite( "Advanced Programs",
 					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
 				Advanced.sprite.position.set(-rad*.82+4, medium + 5, -rad*.7);
-				scene.add( Advanced.sprite  ); */
+				scene.add( Advanced.sprite  );
 
 
 				//Air and Missile Defense
@@ -916,7 +916,7 @@
 				scene.add( DIS.sprite );
 
 
-				/*//Global Solutions
+				//Global Solutions
 				var GSGeo = new THREE.BoxGeometry(width, small, width);
 				var GS = new THREE.Mesh(GSGeo, buildingMaterial);
 				GS.position.set(-rad*1, small/2, rad*.465);
@@ -926,7 +926,7 @@
 				GS.sprite = makeTextSprite( " Global Solutions ",
 					{ fontsize: 30, borderColor: {r:120, g:0, b:120, a:1.0}, backgroundColor: {r:180, g:90, b:180, a:0.6} } );
 				GS.sprite.position.set(-rad*1, small + 5, rad*.465);
-				scene.add( GS.sprite );*/
+				scene.add( GS.sprite );
 
 
 ////////////////LM INTERNATIONAL
@@ -1025,14 +1025,13 @@
 ///////////FUNCTIONALITY BEGINS
 			document.addEventListener('mousemove', onDocumentMouseMove, false);
 
-
-
-			var allBuildings = [U2, IFG, C130, F35, C5, SkunkWorks, Greenville, CES,
-							P3, TS, FC, AirAndMissile, TM,
+			var allBuildings = [U2, IFG, C130, C5, F35, SkunkWorks, Greenville, CES,
+							P3, TS, FC, AirAndMissile, Advanced, TM,
 							IW, SA, Sustain, TL, US,
 							GS, DIS, CM, CIS,
-
-
+							Commercial, CS, ATC, Military, SMD, SP,
+							LMC, LMUK, LMUAE,
+							CHQ, ATL, WO, EBS, CETO]
 
 			//CREATE LIST allSprites. CONTAINS ALL SPRITES
 			function listAllSprites() {
@@ -1047,7 +1046,7 @@
 			var Aeronautics = [F35, SkunkWorks, C130, CES, IFG, U2, C5, Greenville, P3];
 			Aeronautics.floors = []
 
-			var MFC = [ AirAndMissile,FC, TS, TM]
+			var MFC = [Advanced, AirAndMissile,FC, TS, TM]
 			MFC.floors = []
 
 			var MST = [IW, SA, Sustain, TL, US]
@@ -1056,7 +1055,7 @@
 			var SS = [ATC, CS, Commercial, Military, SMD, SP]
 			SS.floors = []
 
-			var ISGS = [CIS, CM, DIS]
+			var ISGS = [CIS, CM, DIS, GS]
 			ISGS.floors = []
 
 			var EO = [CHQ, WO, ATL, CETO, EBS]
