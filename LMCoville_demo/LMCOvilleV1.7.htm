@@ -245,15 +245,15 @@
 
 
 				//GRASS
-				var grassGeo = new THREE.PlaneGeometry(40000, 40000, 10, 10);
+				var grassGeo = new THREE.PlaneGeometry(20000, 20000, 10, 10);
 				var grassMat = new THREE.MeshLambertMaterial({color:0x19A319, side: THREE.DoubleSide});
 				var grass = new THREE.Mesh(grassGeo, grassMat);
 				grass.position.y = -10;
-				grass.rotation.x = Math.PI / 2;
+				grass.rotation.x = Math.PI/2;
 				scene.add(grass);
 
 				//SKYBOX
-				var skyBoxGeo = new THREE.BoxGeometry(50000, 50000, 50000);
+				var skyBoxGeo = new THREE.BoxGeometry(30000, 30000, 30000);
 				var skyBoxMat = new THREE.MeshBasicMaterial({color: 0x00CCFF, side: THREE.BackSide});
 				var skyBox = new THREE.Mesh(skyBoxGeo, skyBoxMat);
 				scene.add(skyBox);
