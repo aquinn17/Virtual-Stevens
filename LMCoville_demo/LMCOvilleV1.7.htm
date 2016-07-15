@@ -567,7 +567,7 @@
 				F35.position.set(0, verylarge/2, -(rad + width/2));
 				scene.add(F35);
 
-				F35.sprite = makeTextSprite( " F-35 ",
+				F35.sprite = makeTextSprite( "Lab ",
 					{ fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				F35.sprite.position.set(20, verylarge + 20, -rad);
 				scene.add( F35.sprite );
@@ -579,7 +579,7 @@
 				SkunkWorks.position.set(width+10, medium/2, -(rad + width/2));
 				scene.add(SkunkWorks);
 
-				SkunkWorks.sprite = makeTextSprite( " Skunk Works ",
+				SkunkWorks.sprite = makeTextSprite( " Civil ",
 					{ fontsize: 40, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				SkunkWorks.sprite.position.set(width + 15, medium + 10, -rad);
 				scene.add( SkunkWorks.sprite );
@@ -591,7 +591,7 @@
 				C5.position.set(-(width+10), medium/2, -(rad + width/2));
 				scene.add(C5);
 
-				C5.sprite = makeTextSprite( " C-5 ",
+				C5.sprite = makeTextSprite( " Electrical ",
 					{ fontsize: 70, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				C5.sprite .position.set(-width + 15, medium + 10, -rad);
 				scene.add( C5.sprite );
@@ -603,7 +603,7 @@
 				C130.position.set(-2*(width+10), medium/2, -(rad + width/2));
 				scene.add(C130);
 
-				C130.sprite = makeTextSprite( " C-130 ",
+				C130.sprite = makeTextSprite( " BioMed ",
 					{ fontsize: 60, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				C130.sprite.position.set(-2*width, medium + 10, -rad);
 				scene.add( C130.sprite );
@@ -615,7 +615,7 @@
 				IFG.position.set(-3*(width+10), large/2, -(rad + width/2));
 				scene.add(IFG);
 
-				IFG.sprite = makeTextSprite( "Integrated Fighter Group",
+				IFG.sprite = makeTextSprite( " MECH E",
 					{ fontsize: 23, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				IFG.sprite.position.set(-3*width-19, large + 7, -rad);
 				scene.add( IFG.sprite  );
@@ -627,7 +627,7 @@
 				Greenville.position.set(2*(width+10), medium/2, -(rad + width/2));
 				scene.add(Greenville);
 
-				Greenville.sprite = makeTextSprite( "Greenville & Field Team",
+				Greenville.sprite = makeTextSprite( " CHEM E",
 					{ fontsize: 26, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				Greenville.sprite.position.set(2*width + 20, medium + 5, -rad);
 				scene.add( Greenville.sprite);
@@ -639,7 +639,7 @@
 				CES.position.set(3*(width+10), small/2, -(rad + width/2));
 				scene.add(CES);
 
-				CES.sprite= makeTextSprite( "Comm. Engine Solutions",
+				CES.sprite= makeTextSprite( " School ",
 					{ fontsize: 26, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				CES.sprite.position.set(3*width + 30, small, -rad);
 				scene.add( CES.sprite);
@@ -651,14 +651,14 @@
 				P3.position.set(4*(width+10), medium/2, -(rad + width/2));
 				scene.add(P3);
 
-				P3.sprite = makeTextSprite( "P-3 Orion",
+				P3.sprite = makeTextSprite( " Physics",
 					{ fontsize: 50, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				P3.sprite.position.set(4*width + 30, medium + 5, -rad);
 				scene.add( P3.sprite );
 
 
 				//U-2 DRAGON LADY
-				var U2Geo = new THREE.BoxGeometry(width, medium, width);
+				/* var U2Geo = new THREE.BoxGeometry(width, medium, width);
 				var U2 = new THREE.Mesh(U2Geo, buildingMaterial);
 				U2.position.set(-4*(width+10), medium/2, -(rad + width/2));
 				scene.add(U2);
@@ -666,7 +666,7 @@
 				U2.sprite = makeTextSprite( "U-2 Dragon Lady",
 					{ fontsize: 35, borderColor: {r:150, g:20, b:250, a:1.0}, backgroundColor: {r:250, g:250, b:0, a:0.8} } );
 				U2.sprite.position.set(-4*width-40, medium + 7, -rad);
-				scene.add( U2.sprite );
+				scene.add( U2.sprite ); */
 
 
 	////////////MISSILES AND FIRE CONTROL//
@@ -677,7 +677,7 @@
 				Advanced.rotation.y = 2.1*Math.PI/7
 				scene.add(Advanced);
 
-				Advanced.sprite = makeTextSprite( "Advanced Programs",
+				Advanced.sprite = makeTextSprite( "Financial",
 					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
 				Advanced.sprite.position.set(-rad*.82+4, medium + 5, -rad*.7);
 				scene.add( Advanced.sprite  );
@@ -690,7 +690,7 @@
 				AirAndMissile.rotation.y = 2.1*Math.PI/7
 				scene.add(AirAndMissile);
 
-				AirAndMissile.sprite = makeTextSprite( "Air&Missile Def.",
+				AirAndMissile.sprite = makeTextSprite( "QF",
 					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
 				AirAndMissile.sprite.position.set(-rad*.905+5, large + 5, -rad*.57-2);
 				scene.add( AirAndMissile.sprite );
@@ -703,7 +703,7 @@
 				FC.rotation.y = 2.1*Math.PI/7
 				scene.add(FC);
 
-				FC.sprite= makeTextSprite( "Fire Control & Log.",
+				FC.sprite= makeTextSprite( "Bussiness",
 					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
 				FC.sprite.position.set(-rad*.9805, large + 5, -rad*.4505);
 				scene.add( FC.sprite );
@@ -716,7 +716,7 @@
 				TS.rotation.y = 2.1*Math.PI/7
 				scene.add(TS);
 
-				TS.sprite = makeTextSprite( "Technical Serv.",
+				TS.sprite = makeTextSprite( "",
 					{ fontsize: 30, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
 				TS.sprite.position.set(-rad*1.05+5, small + 5, -rad*.35+7);
 				scene.add( TS.sprite );
@@ -729,7 +729,7 @@
 				TM.rotation.y = 2.1*Math.PI/7
 				scene.add(TM);
 
-				TM.sprite = makeTextSprite( "Tactical Missiles & Comb.",
+				TM.sprite = makeTextSprite( "",
 					{ fontsize: 25, borderColor: {r:240, g:0, b:0, a:1.0}, backgroundColor: {r:255, g:170, b:175, a:0.8} } );
 				TM.sprite.position.set(-rad*.72-5, large + 5, -rad*.8-5);
 				scene.add( TM.sprite );
@@ -743,7 +743,7 @@
 				IW.rotation.y = -2.1*Math.PI/7
 				scene.add(IW);
 
-				IW.sprite = makeTextSprite( "Integrated Warfare",
+				IW.sprite = makeTextSprite( "CAL",
 					{ fontsize: 30, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
 				IW.sprite.position.set(rad*.72-4, large + 5, -rad*.8);
 				scene.add( IW.sprite );
@@ -755,7 +755,7 @@
 				SA.rotation.y = -2.1*Math.PI/7
 				scene.add(SA);
 
-				SA.sprite = makeTextSprite( "Ship & Aviation Sys",
+				SA.sprite = makeTextSprite( "",
 					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
 				SA.sprite.position.set(rad*.81+4, medium + 5, -rad*.68+5);
 				scene.add( SA.sprite );
@@ -768,7 +768,7 @@
 				Sustain.rotation.y = -2.1*Math.PI/7
 				scene.add(Sustain);
 
-				Sustain.sprite = makeTextSprite( "Sustainability Tech.",
+				Sustain.sprite = makeTextSprite( "",
 					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
 				Sustain.sprite.position.set(rad*.905+4, small + 5, -rad*.57+5);
 				scene.add( Sustain.sprite );
@@ -781,7 +781,7 @@
 				TL.rotation.y = -2.1*Math.PI/7
 				scene.add(TL);
 
-				TL.sprite = makeTextSprite( "Training and Logistics",
+				TL.sprite = makeTextSprite( "",
 					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
 				TL.sprite.position.set(rad*.9805+4, large + 5, -rad*.4505+5);
 				scene.add( TL.sprite );
@@ -794,7 +794,7 @@
 				US.rotation.y = -2.1*Math.PI/7
 				scene.add(US);
 
-				US.sprite = makeTextSprite( "Undersea Systems",
+				US.sprite = makeTextSprite( "",
 					{ fontsize: 25, borderColor: {r:255, g:100, b:0, a:1.0}, backgroundColor: {r:255, g:200, b:0, a:0.8} } );
 				US.sprite.position.set(rad*1.05, medium + 5, -rad*.33+10);
 				scene.add( US.sprite );
@@ -808,7 +808,7 @@
 				ATC.rotation.y = -3.9*Math.PI/7
 				scene.add(ATC);
 
-				ATC.sprite = makeTextSprite( "Adv. Technology Center",
+				ATC.sprite = makeTextSprite( "",
 					{ fontsize: 25, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
 				ATC.sprite.position.set(rad*1.05, large + 5, rad*.2);
 				scene.add( ATC.sprite );
@@ -821,7 +821,7 @@
 				CS.rotation.y = -3.9*Math.PI/7
 				scene.add(CS);
 
-				CS.sprite = makeTextSprite( "Civil Space",
+				CS.sprite = makeTextSprite( "",
 					{ fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
 				CS.sprite.position.set(rad*1.07, medium + 5, rad*.06 + 15);
 				scene.add( CS.sprite );
@@ -834,7 +834,7 @@
 				Commercial.rotation.y = -3.9*Math.PI/7
 				scene.add(Commercial);
 
-				Commercial.sprite = makeTextSprite( "Commercial Space",
+				Commercial.sprite = makeTextSprite( "",
 					{ fontsize: 30, borderColor: {r:0, g:166, b:0, a:1.0}, backgroundColor: {r:100, g:255, b:100, a:0.8} } );
 				Commercial.sprite.position.set(rad*1.085, medium + 5, -rad*.08);
 				scene.add( Commercial.sprite );
@@ -1025,7 +1025,7 @@
 ///////////FUNCTIONALITY BEGINS
 			document.addEventListener('mousemove', onDocumentMouseMove, false);
 
-			var allBuildings = [U2, IFG, C130, C5, F35, SkunkWorks, Greenville, CES,
+			var allBuildings = [ IFG, C130, C5, F35, SkunkWorks, Greenville, CES,
 							P3, TS, FC, AirAndMissile, Advanced, TM,
 							IW, SA, Sustain, TL, US,
 							GS, DIS, CM, CIS,
@@ -1043,7 +1043,7 @@
 			listAllSprites();
 
 
-			var Aeronautics = [F35, SkunkWorks, C130, CES, IFG, U2, C5, Greenville, P3];
+			var Aeronautics = [F35, SkunkWorks, C130, CES, IFG, C5, Greenville, P3];
 			Aeronautics.floors = []
 
 			var MFC = [Advanced, AirAndMissile,FC, TS, TM]
