@@ -998,7 +998,7 @@
 				x = scale
 				z = 0
 				for (i=0; i<4; i++) {
-					var buildingGeom = new THREE.BoxGeometry(width, large, width);
+					var buildingGeom = new THREE.CylinderGeometry(width, large, width);
 					var buildingMate = new THREE.MeshLambertMaterial( {color: 0x00CCCC})
 					var buildingGM = new THREE.Mesh(buildingGeom, buildingMate);
 					scene.add(buildingGM);
