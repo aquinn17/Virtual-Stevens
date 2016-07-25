@@ -999,7 +999,7 @@
 				z = 0
 				for (i=0; i<4; i++) {
 					var buildingGeom = new THREE.BoxGeometry(width, large, width);
-					var buildingMate = new THREE.MeshLambertMaterial( {color: 0x00CCCC})
+					var buildingMate = new THREE.MeshLambertMaterial( {color: 0x5E5959})
 					var buildingGM = new THREE.Mesh(buildingGeom, buildingMate);
 					scene.add(buildingGM);
 					buildingGM.position.set(x, large/2, z);
@@ -1108,7 +1108,7 @@
 			for (i=0; i<LMI.length; i++) {
 				LMI[i].color = 0x00006F}
 			for (i=0; i<LMResources.length; i++) {
-				LMResources[i].color = 0xDAA520}
+				LMResources[i].color = 0xCC2727}
 
 
 			function createFloors(building) {
