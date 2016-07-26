@@ -98,8 +98,8 @@
 	<body>
 		<div id="searchbar">
 			<div style="position: absolute; right: 10px; top: 20px; width: 400px; height: 30px">
-				<form action="http://127.0.0.1:5000" id="tfnewsearch" method="POST" target="_blank">
-						<input type="text" class="tftextinput" name="k" size="30" maxlength="120">
+				<form action="VIRTUAL STEVENS DATA.txt" id="tfnewsearch" method="get" target="_blank">
+						<input type="text" class="tftextinput" name="k" placeholder="Search Professors..." size="30" maxlength="120">
 						<input type="submit" name = "my-search" value="Submit" class="tfbutton">
 				</form>
 				<div class="tfclear"></div>
@@ -243,7 +243,7 @@
 
 
 				//GRASS
-				var grassGeo = new THREE.CircleGeometry(5000, 3000);
+				var grassGeo = new THREE.CircleGeometry(4000, 2000);
 				var grassMat = new THREE.MeshLambertMaterial({color:0x19A319, side: THREE.DoubleSide});
 				var grass = new THREE.Mesh(grassGeo, grassMat);
 				grass.position.y = -10;
