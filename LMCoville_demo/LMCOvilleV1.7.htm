@@ -951,7 +951,7 @@
 				LMC.position.set(-rad*.46, large/2, rad*1.00);
 				LMC.rotation.y = 5.7*Math.PI/7
 				scene.add(LMC);
-*/
+
 ////////////////ENTERPRISE OPERATIONS
 				//ATL
 				var ATLGeo = new THREE.BoxGeometry(width, large, width);
@@ -989,7 +989,7 @@
 				CETO.rotation.y = -6*Math.PI/7
 				scene.add(CETO);
 
-
+*/
 ////////////LM RESOURCES
 			var LMResources = []
 			var LMRMisc = []
@@ -1030,8 +1030,8 @@
 							P3, TS, FC, AirAndMissile, Advanced, TM,
 							IW, SA, Sustain, TL, US,
 							GS, DIS, CM, CIS,
-							Commercial, CS, ATC, Military, SMD, SP,
-							CHQ, ATL, WO, EBS, CETO]
+							Commercial, CS, ATC, Military, SMD, SP]
+							//CHQ, ATL, WO, EBS, CETO
 							//LMC, LMUK, LMUAE,
 
 			//CREATE LIST allSprites. CONTAINS ALL SPRITES
@@ -1059,17 +1059,18 @@
 			var ISGS = [CIS, CM, DIS, GS]
 			ISGS.floors = []
 
-			var EO = [CHQ, WO, ATL, CETO, EBS]
-			EO.floors = []
+			//var EO = [CHQ, WO, ATL, CETO, EBS]
+			//EO.floors = []
 
 			//var LMI = [LMUAE, LMC, LMUK]
 			//LMI.floors = []
 
 			LMResources.floors = []
 
-			var subunits = [Aeronautics, MFC, MST, SS, ISGS, EO, LMResources]//lmi
-			subunits.floors = [Aeronautics.floors, MFC.floors, MST.floors, SS.floors, ISGS.floors, EO.floors, LMResources.floors]
+			var subunits = [Aeronautics, MFC, MST, SS, ISGS, LMResources]//lmi, eo
+			subunits.floors = [Aeronautics.floors, MFC.floors, MST.floors, SS.floors, ISGS.floors, LMResources.floors]
 				//LMI.floors
+				//EO.floors,
 			////CREATE LISTS OF ALL BUILDING.SPRITES FOR EACH SUBUNIT
 			function listSprites(){
 				for (var i=0; i<subunits.length; i++){
@@ -1104,8 +1105,8 @@
 				SS[i].color = 0x30FF30}
 			for (i=0; i<ISGS.length; i++) {
 				ISGS[i].color = 0xA319A3}
-			for (i=0; i<EO.length; i++) {
-				EO[i].color = 0xB8860B}
+			//for (i=0; i<EO.length; i++) {
+			//	EO[i].color = 0xB8860B}
 			//for (i=0; i<LMI.length; i++) {
 			//	LMI[i].color = 0x00006F}
 			for (i=0; i<LMResources.length; i++) {
